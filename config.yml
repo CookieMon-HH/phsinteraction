@@ -1,0 +1,10 @@
+
+# Site Settings
+locale                   : "en-US"
+title                    : "PHS interaction"
+title_separator          : "-"
+subtitle                 : ""
+name                     : "cookiemon-hh"
+description              : "PHS front end study"
+url                      : "https://cookiemon-hh.github.io/phsinteraction/"
+baseurl                  : "-"
