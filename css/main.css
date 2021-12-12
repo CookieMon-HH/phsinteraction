@@ -7,7 +7,7 @@ html {
 
 body {
     overflow-x: hidden; /*스크롤을 만들지 않을 것임 */
-    color : rgb(29,29.31);
+    color : rgb(29,29,31);
     letter-spacing: -0.05em; /*자간 설정*/
     background: white;
 }
@@ -15,7 +15,7 @@ p {
     line-height: 1.6;
 }
 a{
-    color : rgb(29,29.31);
+    color : rgb(29,29,31);
     text-decoration: none; /*기본 밑줄 제거*/
 }
 
