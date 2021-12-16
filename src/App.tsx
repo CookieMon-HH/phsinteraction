@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
+import { FC } from "react";
+import IndexPage from "./pages/indexPage";
 
 const App: FC = function App() {
-  return <div>앱 실행되었음!!</div>;
+  return <IndexPage />;
 };
 
 export default App;
