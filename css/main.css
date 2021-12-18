@@ -21,9 +21,12 @@ a{
 
 .global-nav{
     height : 44px;
+    padding: 0 1rem;
 }
 .local-nav{
     height: 52px;
+    height: 52px;
+        padding: 0 1rem;
     border-bottom: 1px solid #ddd;
 }
 .global-nav-links,
@@ -47,4 +50,111 @@ a{
 }
 .local-nav-links a:not(.product-name) {
     margin-left: 2em;
+}
+.scroll-section {
+    padding-top: 50vh; /* 뷰포트 높이 (브라우저 창 높이)의 50% top padding 줌)*/
+}
+#scroll-section-0 h1 {
+    font-size: 4rem;
+    text-align: center;
+}
+.main-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0;
+    height: 3em;
+    font-size: 2.5rem;
+}
+.main-message p {
+    font-weight : bold;
+    text-align: center;
+    line-height: 1.2;
+}
+.main-message small {
+    display: block;
+    margin-bottom: 0.5em;
+    font-size: 1.2rem;
+}
+#scroll-section2.main-message{
+    font-size: 3.5rem;
+}
+
+.description {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem; /*상하0, 좌우1*/
+    font-size : 1.2;
+    color: #888;
+}
+.description strong {
+    float: left ;
+    /*em을 사용한 이유는 font 사이즈의 비율을 활용하기 위함, 이경우 2.5rem의 3배가 적용*/
+    margin-right: 0.2em; /*font size 3rem의 0.2배*/
+    font-size: 3rem; /*html 폰트 사이즈 14px*3*/
+    color : rgb(29,29,31);
+}
+.desc-message {
+    width : 50%;
+    font-weight : bold;
+}
+.pin {
+    width : 1px;
+    height : 100px;
+    background-color: rgb(29,29,31);
+}
+.mid-message{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding : 0 1rem;
+    font-size: 2rem;
+    color : #888;
+}
+.mid-message strong{
+    color : rgb(29,29,31);
+}
+.canvas-caption{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding : 0 1rem;
+    font-size: 1.2rem;
+    color: #888;
+}
+.footer {
+    display : flex;
+    align-items: center;
+    justify-content: center;
+    height: 7rem;
+    color : white;
+    background-color : darkorange;
+}
+
+@media (min-width: 1024px){
+    #scroll-section-0 h1 {
+        font-size: 9vw;  /*뷰포트 사이즈*/
+    }
+    .main-message {
+        font-size: 4vw;
+    }
+    .description {
+        font-size: 2rem;
+    }
+    .description strong {
+        font-size: 6rem;
+    }
+    #scroll-section-2 .main-message {
+        font-size: 6vw;
+    }
+    .main-message small{
+        font-size: 1.5vw;
+    }
+    .desc-message {
+        width: 20%;
+    }
+    .mid-message {
+        font-size: 4vw;
+    }
+    .canvas-caption {
+        font-size: 2rem;
+    }
 }
