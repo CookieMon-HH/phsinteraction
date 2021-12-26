@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const Frame = styled.nav`
   height: 52px;
+  padding: 0 1rem;
   border-bottom: 1px solid #ddd;
 `;
 

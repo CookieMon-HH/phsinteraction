@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const Frame = styled.nav`
   height : 44px;
+  padding: 0 1rem;
 `;
 
 const LinksFrameDiv = styled.div`
