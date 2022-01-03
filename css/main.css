@@ -21,10 +21,12 @@ a{
 
 .global-nav{
     height : 44px;
+    padding: 0 1rem;
 }
 .local-nav{
     height: 52px;
     border-bottom: 1px solid #ddd;
+    padding: 0 1rem;
 }
 .global-nav-links,
 .local-nav-links{
@@ -47,4 +49,37 @@ a{
 }
 .local-nav-links a:not(.product-name) {
     margin-left: 2em;
+}
+.scroll-section {
+    padding-top: 50vh;
+}
+#scroll-section-0 h1 {
+    font-size: 4rem;
+    text-align: center;
+}
+.main-message {
+    display: flex; /*균등*/
+    align-items: center; /*세로*/
+    justify-content: center; /*가로*/
+    margin: 5px 0;
+    height: 3em;
+    font-size: 2.5rem;
+    /*background: rgba(0, 0, 0, 0.3);*/
+}
+.main-message p {
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.2;
+}
+.description {
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+.description strong {
+    float:left;
+    margin-right: 0.2em;
+    font-size: 3rem;
+    color: rgb(29,29,31);
 }
