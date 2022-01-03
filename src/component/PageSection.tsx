@@ -1,8 +1,10 @@
 import {FC} from "react";
 import styled from "styled-components";
+import fonts from "../const/Font";
 
 const Frame = styled.section`
   adding-top: 50vh;
+  ${fonts.REGULAR}
   h1 {
     font-size: 4rem;
     text-align: center;
@@ -20,9 +22,8 @@ const ElementMainMessageDiv = styled.div`
   margin: 5px 0;
   height: 3em;
   font-size: 2.5rem;
-
   p {
-    font-weight: bold;
+    ${fonts.BOLD}
     text-align: center;
     line-height: 1.2;
   }
@@ -75,7 +76,7 @@ const DescriptionP = styled.p`
 `;
 
 const SticyElemDescriptionMessageDiv = styled.div`
-  font-weight: bold;
+  ${fonts.BOLD}
   width: 50%;
 
   @media (min-width: 1024px) {

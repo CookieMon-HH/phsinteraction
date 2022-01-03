@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import fonts from "../const/Font";
 
 const Frame = styled.nav`
   height: 52px;
@@ -17,15 +18,16 @@ const LinksFrameDiv = styled.div`
 `;
 
 const LinkA = styled.a`
+  ${fonts.REGULAR}
   font-size: 0.8rem;
   margin-left: 2em;
 `;
 
 const LinkALogo = styled(LinkA)`
+  ${fonts.BOLD}
   margin-left: 0;
   margin-right:auto;
   font-size: 1.4rem;
-  font-weight: bold;
 `;
 
 const LocalNav: FC = () => {

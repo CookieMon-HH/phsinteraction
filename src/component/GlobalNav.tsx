@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import fonts from "../const/Font";
 
 const Frame = styled.nav`
   height : 44px;
@@ -16,6 +17,7 @@ const LinksFrameDiv = styled.div`
 `;
 
 const LinkA = styled.a`
+  ${fonts.REGULAR}
   font-size: 0.8rem;
 `;
 

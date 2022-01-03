@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import fonts from "../const/Font";
 
 const Frame = styled.footer`
   display: flex;
@@ -8,6 +9,7 @@ const Frame = styled.footer`
   justify-content: center;
   color: white;
   background: darkorange;
+  ${fonts.REGULAR}
 `;
 
 const IndexPageFooter: FC = (() => {
