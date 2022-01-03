@@ -14,16 +14,37 @@ body {
 p {
     line-height: 1.6;
 }
+a{
+    color : rgb(29,29,31);
+    text-decoration: none; /*기본 밑줄 제거*/
+}
 
 .global-nav{
     height : 44px;
 }
-.global-nav-links {
+.local-nav{
+    height: 52px;
+    border-bottom: 1px solid #ddd;
+}
+.global-nav-links,
+.local-nav-links{
     display: flex; /*내용을 가로 정렬*/
     align-items: center;
-    justify-content: space-between;
     max-width: 1000px;
     height: 100% ;  /*텍스트 높이도 부모를 따라가도록 지정*/
     margin: 0 auto;/*중간정렬*/
 }
-
+.global-nav-links{
+    justify-content: space-between; /*정렬을 균일 간격 정렬, fix start 등 있음*/
+}
+.local-nav-links .product-name { /*a 우선순위높아서 묻혀서 다음 형태로 .앞에 한칸 뛰우는거 개중요한거 실화?*/
+    margin-right: auto;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+.local-nav-links a {
+    font-size: 0.8rem;
+}
+.local-nav-links a:not(.product-name) {
+    margin-left: 2em;
+}
