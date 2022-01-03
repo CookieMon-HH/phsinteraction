@@ -1,17 +1,21 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import {FC} from "react";
 import styled from "styled-components";
+import GlobalNav from "../src/component/GlobalNav";
+import LocalNav from "../src/component/LocalNav";
+import IndexFooter from "../src/component/IndexFooter";
+import PageSection from "../src/component/PageSection";
 
 const Frame = styled.div`
-`
+
+`;
 
 const StartPage: FC  = () =>{
   return (
     <Frame>
-      aaa
+      <GlobalNav/>
+      <LocalNav/>
+      <PageSection/>
+      <IndexFooter/>
     </Frame>
   )
 }
