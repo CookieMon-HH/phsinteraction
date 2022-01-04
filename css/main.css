@@ -71,7 +71,17 @@ a{
     text-align: center;
     line-height: 1.2;
 }
+.main-message small{
+    display: block;
+    margin-bottom: 0.5em;
+    font-size: 1.2rem;
+}
+#scroll-section-2 .main-message {
+    font-size: 3.5rem;
+}
 .description {
+    max-width: 1000px;
+    margin: 0 auto;
     padding: 0 1rem;
     font-size: 1.2rem;
     color: #888;
@@ -82,4 +92,69 @@ a{
     margin-right: 0.2em;
     font-size: 3rem;
     color: rgb(29,29,31);
+}
+.desc-message {
+    width: 50%;
+    font-weight: bold;
+}
+.pin {
+    width: 1px;
+    height: 100px;
+    background: rgb(29,29,31);
+}
+.mid-message {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    font-size: 2rem;
+    color: #888;
+}
+.mid-message strong {
+    color: rgb(29,29,31);
+}
+.canvas-caption {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    color: #888;
+    text-align: center;
+}
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7rem;
+    color: white;
+    background: darkorange;
+}
+
+@media (min-width: 1024px) {
+    #scroll-section-0 h1 {
+        font-size: 9vw;/*윈도우 사이즈의 9포인트*/
+    }
+    .main-message{
+        font-size: 4vw;
+    }
+    .description {
+        padding: 2rem;
+    }
+    .description strong {
+        padding: 6rem;
+    }
+    #scroll-section-2 .main-message {
+        font-size: 6vw;
+    }
+    .main-message small{
+        font-size: 1.5vw;
+    }
+    .desc-message {
+        width: 20%;
+    }
+    .mid-message {
+        font-size: 4vw;/*창 크기의 몇 %인지? 4vw 4%*/
+    }
+    .canvas-caption{
+        font-size: 2rem; /*rem 고정사이즈 폰트사이즈의 2배*/
+    }
 }
