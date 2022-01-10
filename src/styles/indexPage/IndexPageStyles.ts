@@ -37,8 +37,17 @@ const MixinIndexPageMainMessageStyle = `
   `)};
 `;
 
+const MixinStickyMessage = `
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+`;
+
 export {
   MixinMedia1024,
   MixinIndexPageSectionFrameStyle,
   MixinIndexPageMainMessageStyle,
+  MixinStickyMessage,
 };
