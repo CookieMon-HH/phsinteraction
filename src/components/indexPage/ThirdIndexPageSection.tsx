@@ -2,13 +2,12 @@ import { FC } from "react";
 import styled from "styled-components";
 import IStickySection from "../../interfaces/IStickySection";
 import { MixinStickyMessage, MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
-
-const Frame = styled.section`
-  ${MixinIndexPageSectionFrameStyle};
-`;
+import { SCENE_ACTIVE_CLASS_NAME } from "../../utils/SceneController";
 
 const SticyElemMainMessageDiv = styled.div`
   ${MixinIndexPageMainMessageStyle};
+  ${MixinStickyMessage};
+
   font-size: 3.5rem;
 
   ${MixinMedia1024(`
@@ -24,6 +23,17 @@ const SticyElemDescriptionMessageDiv = styled.div`
   ${MixinMedia1024(`
     width: 20%;
   `)};
+`;
+
+const Frame = styled.section`
+  ${MixinIndexPageSectionFrameStyle};
+
+  &.${SCENE_ACTIVE_CLASS_NAME} {
+    ${SticyElemMainMessageDiv},
+    ${SticyElemDescriptionMessageDiv} {
+      display: block;
+    }
+  }
 `;
 
 const PinDiv = styled.div`

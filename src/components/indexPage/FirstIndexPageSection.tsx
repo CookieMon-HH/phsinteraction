@@ -2,6 +2,12 @@ import { FC } from "react";
 import styled from "styled-components";
 import IStickySection from "../../interfaces/IStickySection";
 import { MixinStickyMessage, MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
+import { SCENE_ACTIVE_CLASS_NAME } from "../../utils/SceneController";
+
+const SticyElemMainMessageDiv = styled.div`
+  ${MixinIndexPageMainMessageStyle};
+  ${MixinStickyMessage};
+`;
 
 const Frame = styled.section`
   ${MixinIndexPageSectionFrameStyle};
@@ -13,16 +19,16 @@ const Frame = styled.section`
       font-size: 9vw;    
     `)};
   }
-`;
-
-const SticyElemMainMessageDiv = styled.div`
-  ${MixinIndexPageMainMessageStyle};
-  ${MixinStickyMessage};
+  &.${SCENE_ACTIVE_CLASS_NAME} {
+    ${SticyElemMainMessageDiv} {
+      display: block;
+    }
+  }
 `;
 
 const FirstIndexPageSection: FC<IStickySection> = ((props) => {
   const { containerRef } = props;
-  
+
   return (
     <Frame ref={containerRef}>
       <h1>AirMug Pro</h1>

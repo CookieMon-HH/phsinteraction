@@ -2,6 +2,10 @@ import React, { FC } from "react";
 import styled from "styled-components";
 
 const Frame = styled.nav`
+  position: absolute;
+  top: 44px;
+  left: 0;
+  width: 100%;
   height: 52px;
   padding: 0 1rem;
   border-bottom: 1px solid #ddd;

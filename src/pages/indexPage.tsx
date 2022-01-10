@@ -39,9 +39,11 @@ const IndexPage: FC = () => {
       type: 'sticky',
       container: forthIndexPageContainerRef.current,
     });
-    const resizeEvent = sceneController.addResizeLayoutHandler();
+    const resizeEvent = sceneController.addResizeLayoutEvent();
+    const scrollEvent = sceneController.addScrollLoopEvent();
     return (() => {
       resizeEvent.dispose();
+      scrollEvent.dispose();
     })
   }, []);
 
