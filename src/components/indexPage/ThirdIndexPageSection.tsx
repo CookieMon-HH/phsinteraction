@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
+import IStickySection from "../../interfaces/IStickySection";
+import { MixinStickyMessage, MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
 
 const Frame = styled.section`
   ${MixinIndexPageSectionFrameStyle};
@@ -19,6 +20,7 @@ const SticyElemDescriptionMessageDiv = styled.div`
   font-weight: bold;
   width: 50%;
 
+  ${MixinStickyMessage};
   ${MixinMedia1024(`
     width: 20%;
   `)};
@@ -30,9 +32,10 @@ const PinDiv = styled.div`
   backgroud: rgb(29, 29, 31);
 `;
 
-const ThirdIndexPageSection: FC = (() => {
+const ThirdIndexPageSection: FC<IStickySection> = ((props) => {
+  const { containerRef } = props;
   return (
-    <Frame>
+    <Frame ref={containerRef}>
       <SticyElemMainMessageDiv>
         <p>
           <small>편안한 촉감</small>  

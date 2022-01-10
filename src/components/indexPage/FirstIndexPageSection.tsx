@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
+import IStickySection from "../../interfaces/IStickySection";
+import { MixinStickyMessage, MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
 
 const Frame = styled.section`
   ${MixinIndexPageSectionFrameStyle};
@@ -12,17 +13,18 @@ const Frame = styled.section`
       font-size: 9vw;    
     `)};
   }
-
-  
 `;
 
 const SticyElemMainMessageDiv = styled.div`
   ${MixinIndexPageMainMessageStyle};
+  ${MixinStickyMessage};
 `;
 
-const FirstIndexPageSection: FC = (() => {
+const FirstIndexPageSection: FC<IStickySection> = ((props) => {
+  const { containerRef } = props;
+  
   return (
-    <Frame>
+    <Frame ref={containerRef}>
       <h1>AirMug Pro</h1>
       <SticyElemMainMessageDiv>
         <p>온전히 빠져들게 하는<br />최고급 세라믹</p>

@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import IStickySection from "../../interfaces/IStickySection";
 import { MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
 
 const Frame = styled.section`
@@ -33,9 +34,10 @@ const CanvasCaptionP = styled.p`
   `)};
 `;
 
-const FourthIndexPageSection: FC = (() => {
+const FourthIndexPageSection: FC<IStickySection> = ((props) => {
+  const { containerRef } = props;
   return (
-    <Frame>
+    <Frame ref={containerRef}>
       <MidMessageP>
 				<strong>Retina 머그</strong><br />
 				아이디어를 광활하게 펼칠<br />

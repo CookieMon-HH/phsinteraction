@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import IStickySection from "../../interfaces/IStickySection";
 import { MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
 
 const Frame = styled.section`
@@ -30,9 +31,10 @@ const DescriptionP = styled.p`
   `)};
 `;
 
-const SecondIndexPageSection: FC = (() => {
+const SecondIndexPageSection: FC<IStickySection> = ((props) => {
+  const { containerRef } = props;
   return (
-    <Frame>
+    <Frame ref={containerRef}>
       <DescriptionP>
         <strong>보통 스크롤 영역</strong>
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit optio impedit qui quam, error quidem quis vero! Sit eaque doloremque sunt cum? Impedit id sequi cupiditate at accusamus architecto eveniet.
