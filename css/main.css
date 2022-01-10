@@ -20,10 +20,18 @@ a{
 }
 
 .global-nav{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;  /*postion~width는 scene no. 계산시 메뉴 길이는 반영되지 않도록 하기 위함(공간차지 하지 않도록)*/
     height : 44px;
     padding: 0 1rem;
 }
 .local-nav{
+    position: absolute;
+    top: 45px;
+    left: 0;
+    width: 100%;  /*postion~width는 scene no. 계산시 메뉴 길이는 반영되지 않도록 하기 위함*/
     height: 52px;
     height: 52px;
         padding: 0 1rem;
@@ -127,6 +135,21 @@ a{
     height: 7rem;
     color : white;
     background-color : darkorange;
+}
+/* 위치 고정되어서 나오는 텍스트들에 대한 처리 (postion fixed로 처리) */
+.sticky-elem {
+    display: none; /*none 처리 한 후에 지정된 영역에서만 나오도록 처리*/
+    position: fixed;     
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+/* 각 영역(body)에서 특정 id를 가진 텍스트가 나올 수 있도록 묶어준다. */
+#show-scene-0 #scroll-section-0 .sticky-elem,
+#show-scene-1 #scroll-section-1 .sticky-elem,
+#show-scene-2 #scroll-section-2 .sticky-elem,
+#show-scene-3 #scroll-section-3 .sticky-elem{
+    display: block;
 }
 
 @media (min-width: 1024px){
