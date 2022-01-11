@@ -3,6 +3,10 @@ import styled from "styled-components";
 import fonts from "../const/Font";
 
 const Frame = styled.nav`
+  position : absolute;
+  top : 0;
+  left : 0;
+  width : 100%;
   height : 44px;
   padding: 0 1rem;
 `;
