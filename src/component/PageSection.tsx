@@ -43,22 +43,11 @@ const ElementDiv = styled.div`
     }
   };
   
-  &.another {
-    font-size: 3.5rem;
-
-    @media (min-width: 1024px) {
-      font-size: 6vw;
-    };
-  }
-  
   position : fixed;
   top : 0;
   left: 0;
   width: 100%;
   display: none;
-  &.${ACTIVE_SCENE_CLASS_NAME} {
-    display: block;
-  }
 `;
 
 const ElementDiv2 = styled(ElementDiv)`
@@ -69,13 +58,10 @@ const ElementDiv2 = styled(ElementDiv)`
  };
  
  position : fixed;
-  top : 0;
-  left: 0;
-  width: 100%;
-  display: none;
-  &.${ACTIVE_SCENE_CLASS_NAME} {
-    display: block;
-  }
+ top : 0;
+ left: 0;
+ width: 100%;
+ display: none;
 `
 const DescriptionP = styled.p`
   max-width: 1000px;
@@ -153,7 +139,9 @@ const CanvasCaptionP = styled.p`
 
 const _Section = styled.section`
   &.${ACTIVE_SCENE_CLASS_NAME} {
-    display: block;
+    div{
+      display: block;
+    }
   }
 `
 
@@ -208,6 +196,9 @@ const PageSection: FC = (() => {
           Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit optio impedit qui quam, error quidem quis
           vero!
           Sit eaque doloremque sunt cum? Impedit id sequi cupiditate at accusamus architecto eveniet.
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit optio impedit qui quam, error quidem quis
+          vero!
+          Sit eaque doloremque sunt cum? Impedit id sequi cupiditate at accusamus architecto eveniet.
         </DescriptionP>
       </_Section>
       <_Section ref={thirdSceneContainerRef}>
@@ -235,6 +226,8 @@ const PageSection: FC = (() => {
           아름답고 부드러운 음료 공간.
         </MidMessageP>
         <CanvasCaptionP>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus magni iure dolore ipsa vitae ea natus accusamus
+          suscipit rem et maiores odio, dignissimos repellendus velit voluptatem, eaque rerum ex voluptates!
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus magni iure dolore ipsa vitae ea natus accusamus
           suscipit rem et maiores odio, dignissimos repellendus velit voluptatem, eaque rerum ex voluptates!
         </CanvasCaptionP>

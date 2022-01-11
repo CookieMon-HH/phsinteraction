@@ -18,7 +18,7 @@ interface ISceneInfo {
 export const ACTIVE_SCENE_CLASS_NAME = 'scene_active'
 class SceneUtil {
   static sceneInfo: ISceneInfo[];
-  private static activeSceneContainer: HTMLElement;
+  private static currentActiveScene: HTMLElement;
   
   constructor(data: IScene[]) {
     SceneUtil.sceneInfo = data.map((scene: IScene) => ({
@@ -29,8 +29,8 @@ class SceneUtil {
         container : scene.container
       }
     }));
-    SceneUtil.activeSceneContainer = SceneUtil.sceneInfo[0].obj.container;
-    SceneUtil.activeSceneContainer.classList.add(ACTIVE_SCENE_CLASS_NAME);
+    SceneUtil.currentActiveScene = SceneUtil.sceneInfo[0].obj.container;
+    SceneUtil.currentActiveScene.classList.add(ACTIVE_SCENE_CLASS_NAME);
     SceneUtil.setLayout();
   }
   
@@ -44,24 +44,24 @@ class SceneUtil {
   private static getCurrentSceneIndex = () => {
     const { pageYOffset } = window;
     const sceneLength = SceneUtil.sceneInfo.length;
-    let scrollHeight = 0;
+    let prevScrollHeight = 0;
     for (let index = 0; index < sceneLength; index++) {
-      if (pageYOffset < scrollHeight) {
+      if (pageYOffset < prevScrollHeight) {
         return index - 1;
       }
-      scrollHeight += SceneUtil.sceneInfo[index].scrollHeight;
+      prevScrollHeight += SceneUtil.sceneInfo[index].scrollHeight;
     }
     return sceneLength - 1;
   }
   
   private static scrollLoop = () => {
     const currentSceneIndex = SceneUtil.getCurrentSceneIndex();
-    const nextActiveSceneContainer = SceneUtil.sceneInfo[currentSceneIndex].obj.container;
-    if (SceneUtil.activeSceneContainer === nextActiveSceneContainer) return;
-    console.log(SceneUtil.activeSceneContainer);
-    SceneUtil.activeSceneContainer.classList.remove(ACTIVE_SCENE_CLASS_NAME);
-    SceneUtil.activeSceneContainer = SceneUtil.sceneInfo[currentSceneIndex].obj.container;
-    SceneUtil.activeSceneContainer.classList.add(ACTIVE_SCENE_CLASS_NAME);
+    if(currentSceneIndex < 0) return;
+    const nextScene = SceneUtil.sceneInfo[currentSceneIndex].obj.container;
+    if (SceneUtil.currentActiveScene === nextScene) return;
+    SceneUtil.currentActiveScene.classList.remove(ACTIVE_SCENE_CLASS_NAME);
+    SceneUtil.currentActiveScene = SceneUtil.sceneInfo[currentSceneIndex].obj.container;
+    SceneUtil.currentActiveScene.classList.add(ACTIVE_SCENE_CLASS_NAME);
   }
   
   addResizeLayoutEvent = () => {
