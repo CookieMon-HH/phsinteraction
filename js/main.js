@@ -12,7 +12,14 @@
             heightNum: 5, //브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight: 0, 
             objs: {
-                container: document.querySelector('#scroll-section-0') //각 부분을 할당하기 위함
+                container: document.querySelector('#scroll-section-0'), //각 부분을 할당하기 위함
+                messageA: document.querySelector('#scroll-section-0 .main-message.a'),
+                messageB: document.querySelector('#scroll-section-0 .main-message.b'),
+                messageC: document.querySelector('#scroll-section-0 .main-message.c'),
+                messageD: document.querySelector('#scroll-section-0 .main-message.d')
+            },
+            values: {
+                messageA_opacity: [0,1]
             }
         },
         {
@@ -68,6 +75,23 @@
         } 
     }
 
+    function playAnimation(){
+        switch(currentScene) {
+            case 0:
+                // console.log('0 play');
+                break;
+            case 1:
+                // console.log('1 play');
+                break;
+            case 2:
+                // console.log('2 play');
+                break;
+            case 3:
+                // console.log('3 play');
+                break;
+        }
+    }
+
     function scrollLoop() {
         //현재 scene을 0으로 시작하고 스크롤할 때 마다 scene 변경 조건을 확인해서 증가시키거나 감소시키는듯 
         //아래서 새로고침해도 스크롤 하면 조건에 들어오니까 바로 찾을 수 있는듯 (setLayout에 세팅 없었을때)
@@ -80,14 +104,17 @@
         if(yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight){
             currentScene ++;
         }
-        //(아래 방향으로 스크롤)현재 y 위치가 이전 scene들의 높이+지금 secen의 높이보다 커지면 증가  
         document.body.setAttribute('id',`show-scene-${currentScene}`);
+        //(아래 방향으로 스크롤)현재 y 위치가 이전 scene들의 높이+지금 secen의 높이보다 커지면 증가  
+
         if(yOffset < prevScrollHeight){
             if (currentScene==0) return; //브라우저 바운스 효과로 인해 yoffset이 -가 되는 경우가 있어 scene이 음수가 되는것을 방지
             currentScene --; 
         }
-        //(위 방향으로 스크롤) 현재 y 위치가 이전 scene들의 높이보다 작아지면 감소
         document.body.setAttribute('id',`show-scene-${currentScene}`);
+        //(위 방향으로 스크롤) 현재 y 위치가 이전 scene들의 높이보다 작아지면 감소
+        
+        playAnimation();
     }
 
     window.addEventListener('scroll', () => {
