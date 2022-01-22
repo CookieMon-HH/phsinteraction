@@ -75,10 +75,23 @@
         } 
     }
 
+    function calcValues (values, currentYOffest) {
+
+    }
+
     function playAnimation(){
+        const objs = sceneInfo[currentScene].objs;
+        const values = sceneInfo[currentScene].values;
+        const currentYOffest = yOffset - prevScrollHeight;
+
         switch(currentScene) {
             case 0:
                 // console.log('0 play');
+                let meesageA_opacity_0 = values.messageA_opacity[0];
+                let meesageA_opacity_1 = values.messageA_opacity[1];
+
+                console.log(calcValues(values.messageA_opacity, currentYOffest))
+
                 break;
             case 1:
                 // console.log('1 play');
