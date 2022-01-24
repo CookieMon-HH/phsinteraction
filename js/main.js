@@ -4,6 +4,7 @@
     let yOffset = 0; //window.pageYOffset 대신 쓸 변수
     let prevScrollHeight = 0; //현재 스크롤 위치 보다 이전에 위치한 스크롤 섹션들의 스크롤 높이의 합
     let currentScene = 0; //현재 활성화 된 씬 (scroll-section)
+    let enterNewScene = false; //새로운 scene이 시작된 순간 true
 
     const sceneInfo = [
         {
@@ -76,7 +77,12 @@
     }
 
     function calcValues (values, currentYOffest) {
+        let rv;
+        //현재 씬에서 스크롤된 범위를 비율로 구하기
+        let scrollRatio = currentYOffest / sceneInfo[currentScene].scrollHeight; 
+        rv = scrollRatio * (values[1]-values[0]) + values[0];
 
+        return rv
     }
 
     function playAnimation(){
@@ -84,14 +90,14 @@
         const values = sceneInfo[currentScene].values;
         const currentYOffest = yOffset - prevScrollHeight;
 
+        console.log(currentScene);
+
         switch(currentScene) {
             case 0:
                 // console.log('0 play');
-                let meesageA_opacity_0 = values.messageA_opacity[0];
-                let meesageA_opacity_1 = values.messageA_opacity[1];
-
-                console.log(calcValues(values.messageA_opacity, currentYOffest))
-
+                let messageA_opacity_in = calcValues(values.messageA_opacity, currentYOffest);
+                objs.messageA.style.opacity = messageA_opacity_in;
+                console.log(messageA_opacity_in)
                 break;
             case 1:
                 // console.log('1 play');
@@ -109,24 +115,30 @@
         //현재 scene을 0으로 시작하고 스크롤할 때 마다 scene 변경 조건을 확인해서 증가시키거나 감소시키는듯 
         //아래서 새로고침해도 스크롤 하면 조건에 들어오니까 바로 찾을 수 있는듯 (setLayout에 세팅 없었을때)
         //현재 화면의 상단과 해당 section이 만나는 경우가 전환시점
+        enterNewScene = false;
         prevScrollHeight = 0;
         for(let i = 0; i<currentScene; i++) {
             prevScrollHeight += sceneInfo[i].scrollHeight;
         }
 
         if(yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight){
+            enterNewScene = true;
             currentScene ++;
         }
         document.body.setAttribute('id',`show-scene-${currentScene}`);
         //(아래 방향으로 스크롤)현재 y 위치가 이전 scene들의 높이+지금 secen의 높이보다 커지면 증가  
 
         if(yOffset < prevScrollHeight){
+            enterNewScene = true;
             if (currentScene==0) return; //브라우저 바운스 효과로 인해 yoffset이 -가 되는 경우가 있어 scene이 음수가 되는것을 방지
             currentScene --; 
         }
         document.body.setAttribute('id',`show-scene-${currentScene}`);
         //(위 방향으로 스크롤) 현재 y 위치가 이전 scene들의 높이보다 작아지면 감소
         
+        if(enterNewScene == true)  return; 
+        //장면이 전환되는 시점에는 palyanimation을 실행하지 않도록 처리
+
         playAnimation();
     }
 
