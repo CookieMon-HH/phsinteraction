@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import styled from "styled-components";
 import IStickySection from "../../interfaces/IStickySection";
 import { MixinStickyMessage, MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
@@ -43,7 +43,13 @@ const PinDiv = styled.div`
 `;
 
 const ThirdIndexPageSection: FC<IStickySection> = ((props) => {
-  const { containerRef } = props;
+  const { containerRef, onScene } = props;
+  
+  useEffect(() => {
+    if(!onScene) return;
+    onScene.current = (yOffset: number) => console.log('aaaaa3333 :', yOffset);
+  }, [onScene]);
+
   return (
     <Frame ref={containerRef}>
       <SticyElemMainMessageDiv>

@@ -9,7 +9,7 @@ import FourthIndexPageSection from "../components/indexPage/FourthIndexPageSecti
 import IndexPageFooter from "../components/indexPage/IndexPageFooter";
 import SecondIndexPageSection from "../components/indexPage/SecondIndexPageSection";
 import ThirdIndexPageSection from "../components/indexPage/ThirdIndexPageSection";
-import SceneController from "../utils/SceneController";
+import SceneController, { SceneFunction } from "../utils/SceneController";
 
 const Frame = styled.div`
 `;
@@ -20,24 +20,39 @@ const IndexPage: FC = () => {
   const thirdIndexPageContainerRef = useRef<HTMLElement>(null);
   const forthIndexPageContainerRef = useRef<HTMLElement>(null);
   
+  const onFirstSceneHandler: React.MutableRefObject<SceneFunction | undefined> = useRef<SceneFunction | undefined>();
+  const onSecondSceneHandler: React.MutableRefObject<SceneFunction | undefined> = useRef<SceneFunction | undefined>();
+  const onThirdSceneHandler: React.MutableRefObject<SceneFunction | undefined> = useRef<SceneFunction | undefined>();
+  const onForthSceneHandler: React.MutableRefObject<SceneFunction | undefined> = useRef<SceneFunction | undefined>();
+
   useEffect(() => {
     const isInValidAllContainRef =  !firstIndexPageContainerRef.current ||
                                     !secondIndexPageContainerRef.current ||
                                     !thirdIndexPageContainerRef.current ||
                                     !forthIndexPageContainerRef.current
+
+    const isInValidAllSceneHandlerRef =  !onFirstSceneHandler.current ||
+                                          !onSecondSceneHandler.current ||
+                                          !onThirdSceneHandler.current ||
+                                          !onForthSceneHandler.current
     if (isInValidAllContainRef) return;
+    if (isInValidAllSceneHandlerRef) return;
     const sceneController = new SceneController({
       type: 'sticky',
       container: firstIndexPageContainerRef.current,
+      onScene: onFirstSceneHandler.current,
     }, {
       type: 'normal',
       container: secondIndexPageContainerRef.current,
+      onScene: onSecondSceneHandler.current,
     }, {
       type: 'sticky',
       container: thirdIndexPageContainerRef.current,
+      onScene: onThirdSceneHandler.current,
     }, {
       type: 'sticky',
       container: forthIndexPageContainerRef.current,
+      onScene: onForthSceneHandler.current,
     });
     const resizeEvent = sceneController.addResizeLayoutEvent();
     const scrollEvent = sceneController.addScrollLoopEvent();
@@ -51,10 +66,22 @@ const IndexPage: FC = () => {
     <Frame>
       <GlobalNavigation />
       <LocalNavigation />
-      <FirstIndexPageSection containerRef={firstIndexPageContainerRef}/>
-      <SecondIndexPageSection containerRef={secondIndexPageContainerRef} />
-      <ThirdIndexPageSection containerRef={thirdIndexPageContainerRef}/>
-      <FourthIndexPageSection containerRef={forthIndexPageContainerRef}/>
+      <FirstIndexPageSection
+        containerRef={firstIndexPageContainerRef}
+        onScene={onFirstSceneHandler}
+      />
+      <SecondIndexPageSection
+        containerRef={secondIndexPageContainerRef}
+        onScene={onSecondSceneHandler}
+      />
+      <ThirdIndexPageSection
+        containerRef={thirdIndexPageContainerRef}
+        onScene={onThirdSceneHandler}
+      />
+      <FourthIndexPageSection
+        containerRef={forthIndexPageContainerRef}
+        onScene={onForthSceneHandler}
+      />
       <IndexPageFooter />
     </Frame>
   );

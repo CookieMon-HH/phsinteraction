@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import styled from "styled-components";
 import IStickySection from "../../interfaces/IStickySection";
 import { MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
@@ -32,7 +32,13 @@ const DescriptionP = styled.p`
 `;
 
 const SecondIndexPageSection: FC<IStickySection> = ((props) => {
-  const { containerRef } = props;
+  const { containerRef, onScene } = props;
+  
+  useEffect(() => {
+    if(!onScene) return;
+    onScene.current = (yOffset: number) => console.log('aaaaa222 :', yOffset);
+  }, [onScene]);
+
   return (
     <Frame ref={containerRef}>
       <DescriptionP>
