@@ -74,6 +74,7 @@ a{
     height: 3em;
     font-size: 2.5rem;
     /*background: rgba(0, 0, 0, 0.3);*/
+    opacity: 0;
 }
 .main-message p {
     font-weight: bold;
