@@ -48,6 +48,8 @@ const ElementDiv = styled.div`
   left: 0;
   width: 100%;
   display: none;
+  
+  opacity : 0;
 `;
 
 const ElementDiv2 = styled(ElementDiv)`
@@ -151,11 +153,23 @@ const PageSection: FC = (() => {
   const thirdSceneContainerRef = useRef<HTMLElement>(null);
   const fourthSceneContainerRef = useRef<HTMLElement>(null);
   
+  const messageA = useRef<HTMLDivElement>(null);
+  const messageB = useRef<HTMLDivElement>(null);
+  const messageC = useRef<HTMLDivElement>(null);
+  const messageD = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
     if (!firstSceneContainerRef.current || !secondSceneContainerRef.current || !thirdSceneContainerRef.current || !fourthSceneContainerRef.current) return;
+    if (!messageA.current || !messageB.current || !messageC.current || !messageD.current ) return ;
     const sceneUtil = new SceneUtil([{
       type: 'sticky',
       container: firstSceneContainerRef.current,
+      messageGroup: {
+        messageA : messageA.current,
+        messageB : messageB.current,
+        messageC : messageC.current,
+        messageD : messageD.current,
+      }
     }, {
       type: 'normal',
       container: secondSceneContainerRef.current,
@@ -177,16 +191,16 @@ const PageSection: FC = (() => {
     <Frame>
       <_Section ref={firstSceneContainerRef}>
         <h1>AirMug Pro</h1>
-        <ElementDiv>
+        <ElementDiv ref={messageA}>
           <p>온전히 빠져들게 하는<br/>최고급 세라믹</p>
         </ElementDiv>
-        <ElementDiv>
+        <ElementDiv ref={messageB}>
           <p>주변 맛을 느끼게 해주는<br/>주변 맛 허용 모드</p>
         </ElementDiv>
-        <ElementDiv>
+        <ElementDiv ref={messageC}>
           <p>온종일 편안한<br/>맞춤형 손잡이</p>
         </ElementDiv>
-        <ElementDiv>
+        <ElementDiv ref={messageD}>
           <p>새롭게 입가를<br/>찾아온 매혹</p>
         </ElementDiv>
       </_Section>
