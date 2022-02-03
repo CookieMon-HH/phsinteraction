@@ -70,6 +70,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: center;
+    top: 35vh;
     margin: 5px 0;
     height: 3em;
     font-size: 2.5rem;
@@ -112,6 +113,15 @@ a{
     height : 100px;
     background-color: rgb(29,29,31);
 }
+#scroll-section-2 .b {
+    top: 10%;
+    left: 40%;
+}
+#scroll-section-2 .c {
+    top: 15%;
+    left: 45%;
+}
+
 .mid-message{
     max-width: 1000px;
     margin: 0 auto;
@@ -141,7 +151,6 @@ a{
 .sticky-elem {
     display: none; /*none 처리 한 후에 지정된 영역에서만 나오도록 처리*/
     position: fixed;     
-    top: 0;
     left: 0;
     width: 100%;
 }
@@ -174,6 +183,13 @@ a{
     }
     .desc-message {
         width: 20%;
+    }
+    #scroll-section-2 .b {
+        top: 20%;
+        left: 53%;
+    }
+    #scroll-section-2 .c {
+        left: 55%;
     }
     .mid-message {
         font-size: 4vw;
