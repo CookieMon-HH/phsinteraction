@@ -3,33 +3,50 @@ type SceneType = 'sticky' | 'normal';
 interface IScene {
   type: SceneType;
   container: HTMLElement;
-  messageGroup? :IMessageGroup;
+  messageGroup?: IMessageGroup;
+}
+
+interface IMessage {
+  message: HTMLDivElement;
+  opacityIn: IOpacity;
+  opacityOut: IOpacity;
+  translateIn: ITranslate;
+  translateOut: ITranslate;
 }
 
 interface IMessageGroup {
-  messageA : HTMLDivElement;
-  messageB : HTMLDivElement;
-  messageC : HTMLDivElement;
-  messageD : HTMLDivElement;
+  messageA: IMessage;
+  messageB: IMessage;
+  messageC: IMessage;
+  messageD: IMessage;
 }
+
+interface IOpacity {
+  range: number[];
+  startRatio: number;
+  endRatio: number;
+}
+
+interface ITranslate extends IOpacity {
+};
 
 interface ISceneInfoObj {
   container: HTMLElement;
-  messageGroup? : IMessageGroup;
-  values : number[];
+  messageGroup?: IMessageGroup;
 }
 
 interface ISceneInfo {
   type: SceneType;
   heightNum: number;
   scrollHeight: number;
-  obj : ISceneInfoObj;
+  obj: ISceneInfoObj;
 }
 
 export const ACTIVE_SCENE_CLASS_NAME = 'scene_active'
 
 class SceneUtil {
   static sceneInfo: ISceneInfo[];
+  static prevScrollHeight = 0;
   private static currentActiveScene: HTMLElement;
   
   constructor(data: IScene[]) {
@@ -37,10 +54,9 @@ class SceneUtil {
       type: scene.type,
       heightNum: 5,
       scrollHeight: 0,
-      obj:{
-        container : scene.container,
-        messageGroup : scene.messageGroup,
-        values : [0,1],
+      obj: {
+        container: scene.container,
+        messageGroup: scene.messageGroup,
       }
     }));
     SceneUtil.currentActiveScene = SceneUtil.sceneInfo[0].obj.container;
@@ -56,7 +72,7 @@ class SceneUtil {
   }
   
   private static getCurrentSceneIndex = () => {
-    const { pageYOffset } = window;
+    const {pageYOffset} = window;
     const sceneLength = SceneUtil.sceneInfo.length;
     let prevScrollHeight = 0;
     for (let index = 0; index < sceneLength; index++) {
@@ -68,22 +84,54 @@ class SceneUtil {
     return sceneLength - 1;
   }
   
-  private static calcValues = (values: number[], pageYOffset : number) => {
-    const scrollRatio = pageYOffset / SceneUtil.currentActiveScene.scrollHeight;
-    return scrollRatio * (values[1] - values[0]);
+  private static calcValues = (values: IOpacity | ITranslate, pageYOffset: number) => {
+    const scrollHeight = SceneUtil.currentActiveScene.scrollHeight;
+    const minValue = values.range[0];
+    const maxValue = values.range[1];
+    const partScrollStart = values.startRatio * scrollHeight;
+    const partScrollEnd = values.endRatio * scrollHeight;
+    const partScrollHeight = partScrollEnd - partScrollStart;
+    
+    if (pageYOffset > partScrollEnd) {
+      return maxValue;
+    } else if (pageYOffset < partScrollStart) {
+      return minValue;
+    } else {
+      return (pageYOffset - partScrollStart) / partScrollHeight * (maxValue - minValue) + minValue;
+    }
   }
   
-  private static playAnimation = (currentSceneIndex : number) => {
-    const { pageYOffset } = window;
-    switch (currentSceneIndex){
+  private static playAnimation = (currentSceneIndex: number) => {
+    const {pageYOffset} = window;
+    switch (currentSceneIndex) {
       case 0:
-        const group = SceneUtil.sceneInfo[currentSceneIndex].obj.messageGroup;
-        if(group === undefined) return;
-        group.messageA.style.opacity = SceneUtil.calcValues(SceneUtil.sceneInfo[currentSceneIndex].obj.values, pageYOffset).toString();
+        const firstGroup = SceneUtil.sceneInfo[currentSceneIndex].obj.messageGroup;
+        if (firstGroup === undefined) return;
+        const firstGroupRatio = pageYOffset / SceneUtil.currentActiveScene.scrollHeight;
+        firstGroup.messageA.message.style.opacity = firstGroupRatio <= 0.22 ? SceneUtil.calcValues(firstGroup.messageA.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageA.opacityOut, pageYOffset).toString();
+        firstGroup.messageB.message.style.opacity = firstGroupRatio <= 0.42 ? SceneUtil.calcValues(firstGroup.messageB.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageB.opacityOut, pageYOffset).toString();
+        firstGroup.messageC.message.style.opacity = firstGroupRatio <= 0.62 ? SceneUtil.calcValues(firstGroup.messageC.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageC.opacityOut, pageYOffset).toString();
+        firstGroup.messageD.message.style.opacity = firstGroupRatio <= 0.82 ? SceneUtil.calcValues(firstGroup.messageD.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageD.opacityOut, pageYOffset).toString();
+        
+        firstGroup.messageA.message.style.transform = firstGroupRatio <= 0.22 ? `translateY(${SceneUtil.calcValues(firstGroup.messageA.translateIn, pageYOffset)}%)` : `translateY(${SceneUtil.calcValues(firstGroup.messageA.translateOut, pageYOffset)}%)`;
+        firstGroup.messageB.message.style.transform = firstGroupRatio <= 0.42 ? `translateY(${SceneUtil.calcValues(firstGroup.messageB.translateIn, pageYOffset)}%)` : `translateY(${SceneUtil.calcValues(firstGroup.messageB.translateOut, pageYOffset)}%)`;
+        firstGroup.messageC.message.style.transform = firstGroupRatio <= 0.62 ? `translateY(${SceneUtil.calcValues(firstGroup.messageC.translateIn, pageYOffset)}%)` : `translateY(${SceneUtil.calcValues(firstGroup.messageC.translateOut, pageYOffset)}%)`;
+        firstGroup.messageD.message.style.transform = firstGroupRatio <= 0.82 ? `translateY(${SceneUtil.calcValues(firstGroup.messageD.translateIn, pageYOffset)}%)` : `translateY(${SceneUtil.calcValues(firstGroup.messageD.translateOut, pageYOffset)}%)`;
         return;
       case 1:
         return;
       case 2:
+        const thirdGroup = SceneUtil.sceneInfo[currentSceneIndex].obj.messageGroup;
+        if (thirdGroup === undefined) return;
+        const prev = pageYOffset - 13660;
+        const thirdGroupRatio = (prev) / SceneUtil.currentActiveScene.scrollHeight;
+        thirdGroup.messageA.message.style.opacity = thirdGroupRatio <= 0.32 ? SceneUtil.calcValues(thirdGroup.messageA.opacityIn, prev).toString() : SceneUtil.calcValues(thirdGroup.messageA.opacityOut, prev).toString();
+        thirdGroup.messageB.message.style.opacity = thirdGroupRatio <= 0.62 ? SceneUtil.calcValues(thirdGroup.messageB.opacityIn, prev).toString() : SceneUtil.calcValues(thirdGroup.messageB.opacityOut, prev).toString();
+        thirdGroup.messageC.message.style.opacity = thirdGroupRatio <= 0.92 ? SceneUtil.calcValues(thirdGroup.messageC.opacityIn, prev).toString() : SceneUtil.calcValues(thirdGroup.messageC.opacityOut, prev).toString();
+        
+        thirdGroup.messageA.message.style.transform = thirdGroupRatio <= 0.32 ? `translateY(${SceneUtil.calcValues(thirdGroup.messageA.translateIn, prev)}%)` : `translateY(${SceneUtil.calcValues(thirdGroup.messageA.translateOut, prev)}%)`;
+        thirdGroup.messageB.message.style.transform = thirdGroupRatio <= 0.62 ? `translateY(${SceneUtil.calcValues(thirdGroup.messageB.translateIn, prev)}%)` : `translateY(${SceneUtil.calcValues(thirdGroup.messageB.translateOut, prev)}%)`;
+        thirdGroup.messageC.message.style.transform = thirdGroupRatio <= 0.92 ? `translateY(${SceneUtil.calcValues(thirdGroup.messageC.translateIn, prev)}%)` : `translateY(${SceneUtil.calcValues(thirdGroup.messageC.translateOut, prev)}%)`;
         return;
       case 3:
         return;
@@ -92,7 +140,7 @@ class SceneUtil {
   
   private static scrollLoop = () => {
     const currentSceneIndex = SceneUtil.getCurrentSceneIndex();
-    if(currentSceneIndex < 0) return;
+    if (currentSceneIndex < 0) return;
     const nextScene = SceneUtil.sceneInfo[currentSceneIndex].obj.container;
     if (SceneUtil.currentActiveScene === nextScene) {
       SceneUtil.playAnimation(currentSceneIndex);

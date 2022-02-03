@@ -50,6 +50,8 @@ const ElementDiv = styled.div`
   display: none;
   
   opacity : 0;
+ 
+  top : 35vh;
 `;
 
 const ElementDiv2 = styled(ElementDiv)`
@@ -153,22 +155,116 @@ const PageSection: FC = (() => {
   const thirdSceneContainerRef = useRef<HTMLElement>(null);
   const fourthSceneContainerRef = useRef<HTMLElement>(null);
   
-  const messageA = useRef<HTMLDivElement>(null);
-  const messageB = useRef<HTMLDivElement>(null);
-  const messageC = useRef<HTMLDivElement>(null);
-  const messageD = useRef<HTMLDivElement>(null);
+  const messageA_1 = useRef<HTMLDivElement>(null);
+  const messageB_1 = useRef<HTMLDivElement>(null);
+  const messageC_1 = useRef<HTMLDivElement>(null);
+  const messageD_1 = useRef<HTMLDivElement>(null);
+  
+  const messageA_3 = useRef<HTMLDivElement>(null);
+  const messageB_3 = useRef<HTMLDivElement>(null);
+  const messageC_3 = useRef<HTMLDivElement>(null);
+  const messageD_3 = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     if (!firstSceneContainerRef.current || !secondSceneContainerRef.current || !thirdSceneContainerRef.current || !fourthSceneContainerRef.current) return;
-    if (!messageA.current || !messageB.current || !messageC.current || !messageD.current ) return ;
+    if (!messageA_1.current || !messageB_1.current || !messageC_1.current || !messageD_1.current) return;
+    if (!messageA_3.current || !messageB_3.current || !messageC_3.current) return;
     const sceneUtil = new SceneUtil([{
       type: 'sticky',
       container: firstSceneContainerRef.current,
       messageGroup: {
-        messageA : messageA.current,
-        messageB : messageB.current,
-        messageC : messageC.current,
-        messageD : messageD.current,
+        messageA: {
+          message: messageA_1.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.1,
+            endRatio: 0.2
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.25,
+            endRatio: 0.3
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.1,
+            endRatio: 0.2
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.25,
+            endRatio: 0.3
+          }
+        },
+        messageB: {
+          message: messageB_1.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.3,
+            endRatio: 0.4
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.45,
+            endRatio: 0.5
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.3,
+            endRatio: 0.4
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.45,
+            endRatio: 0.5
+          }
+        },
+        messageC: {
+          message: messageC_1.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.5,
+            endRatio: 0.6
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.65,
+            endRatio: 0.7
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.5,
+            endRatio: 0.6
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.65,
+            endRatio: 0.7
+          }
+        },
+        messageD: {
+          message: messageD_1.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.7,
+            endRatio: 0.8
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.85,
+            endRatio: 0.9
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.7,
+            endRatio: 0.8
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.85,
+            endRatio: 0.9
+          }
+        },
       }
     }, {
       type: 'normal',
@@ -176,6 +272,100 @@ const PageSection: FC = (() => {
     }, {
       type: 'sticky',
       container: thirdSceneContainerRef.current,
+      messageGroup: {
+        messageA: {
+          message: messageA_3.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.1,
+            endRatio: 0.3
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.35,
+            endRatio: 0.4
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.1,
+            endRatio: 0.3
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.35,
+            endRatio: 0.4
+          }
+        },
+        messageB: {
+          message: messageB_3.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.4,
+            endRatio: 0.6
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.65,
+            endRatio: 0.7
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.4,
+            endRatio: 0.6
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.65,
+            endRatio: 0.7
+          }
+        },
+        messageC: {
+          message: messageC_3.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.7,
+            endRatio: 0.9
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.95,
+            endRatio: 1
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.7,
+            endRatio: 0.9
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.95,
+            endRatio: 1
+          }
+        },
+        messageD: {
+          message: messageC_3.current,
+          opacityIn: {
+            range: [0, 1],
+            startRatio: 0.7,
+            endRatio: 0.8
+          },
+          opacityOut: {
+            range: [1, 0],
+            startRatio: 0.85,
+            endRatio: 0.9
+          },
+          translateIn: {
+            range: [20, 0],
+            startRatio: 0.7,
+            endRatio: 0.8
+          },
+          translateOut: {
+            range: [0, -20],
+            startRatio: 0.85,
+            endRatio: 0.9
+          }
+        }
+      }
     }, {
       type: 'sticky',
       container: fourthSceneContainerRef.current,
@@ -191,16 +381,16 @@ const PageSection: FC = (() => {
     <Frame>
       <_Section ref={firstSceneContainerRef}>
         <h1>AirMug Pro</h1>
-        <ElementDiv ref={messageA}>
+        <ElementDiv ref={messageA_1}>
           <p>온전히 빠져들게 하는<br/>최고급 세라믹</p>
         </ElementDiv>
-        <ElementDiv ref={messageB}>
+        <ElementDiv ref={messageB_1}>
           <p>주변 맛을 느끼게 해주는<br/>주변 맛 허용 모드</p>
         </ElementDiv>
-        <ElementDiv ref={messageC}>
+        <ElementDiv ref={messageC_1}>
           <p>온종일 편안한<br/>맞춤형 손잡이</p>
         </ElementDiv>
-        <ElementDiv ref={messageD}>
+        <ElementDiv ref={messageD_1}>
           <p>새롭게 입가를<br/>찾아온 매혹</p>
         </ElementDiv>
       </_Section>
@@ -216,19 +406,19 @@ const PageSection: FC = (() => {
         </DescriptionP>
       </_Section>
       <_Section ref={thirdSceneContainerRef}>
-        <ElementDiv2>
+        <ElementDiv2 ref={messageA_3}>
           <p>
             <small>편안한 촉감</small>
             입과 하나 되다
           </p>
         </ElementDiv2>
-        <DescriptionDiv>
+        <DescriptionDiv ref={messageB_3}>
           <p>
             편안한 목넘김을 완성하는 디테일한 여러 구성 요소들, 우리는 이를 하나하나 새롭게 살피고 재구성하는 과정을 거쳐 새로운 수준의 머그, AirMug Pro를 만들었습니다. 입에 뭔가 댔다는 감각은
             어느새 사라지고 오롯이 당신과 음료만 남게 되죠.
           </p>
         </DescriptionDiv>
-        <DescriptionDiv>
+        <DescriptionDiv ref={messageC_3}>
           디자인 앤 퀄리티 오브 스웨덴,<br/>메이드 인 차이나
         </DescriptionDiv>
       </_Section>
