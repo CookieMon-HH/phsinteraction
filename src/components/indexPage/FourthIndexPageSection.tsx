@@ -39,7 +39,7 @@ const FourthIndexPageSection: FC<IStickySection> = ((props) => {
   
   useEffect(() => {
     if(!onScene) return;
-    onScene.current = (yOffset: number) => console.log('aaaaa444 :', yOffset);
+    onScene.current = (yOffset: number, ratio: number) => console.log('aaaaa444 :', yOffset, ratio);
   }, [onScene]);
 
   return (

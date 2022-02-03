@@ -1,9 +1,10 @@
 type SceneType = 'sticky' | 'normal';
-export type SceneFunction = (yOffset: number) => void;
+export type SceneFunction = (yOffset: number, ratio: number) => void;
 
 interface IScene {
   type: SceneType;
   container: HTMLElement;
+  scale?: number;
   onScene?: SceneFunction;
 }
 
@@ -13,7 +14,7 @@ interface ISceneObjs {
 
 interface ISceneInfo {
   type: SceneType;
-  heightNum: number;
+  scale: number;
   scrollHeight: number;
   objs: ISceneObjs;
   onScene?: SceneFunction;
@@ -28,7 +29,7 @@ class SceneController {
   constructor(...scenes: IScene[]) {
     this.sceneInfos = scenes.map((scene: IScene) => ({
       type: scene.type,
-      heightNum: 5,
+      scale: scene.scale || 5,
       scrollHeight: 0,
       objs: {
         container: scene.container,
@@ -42,7 +43,7 @@ class SceneController {
 
   private setLayout = () => {
     this.sceneInfos.forEach((sceneInfo: ISceneInfo) => {
-      sceneInfo.scrollHeight = sceneInfo.heightNum * window.innerHeight;
+      sceneInfo.scrollHeight = sceneInfo.scale * window.innerHeight;
       sceneInfo.objs.container.style.height = `${sceneInfo.scrollHeight}px`;
     })
   }
@@ -75,8 +76,8 @@ class SceneController {
 
   private onSceneHandler = (sceneIndex: number) => {
     const yOffset = this.getActiveSceneYOffset(sceneIndex);
-    const { onScene } = this.sceneInfos[sceneIndex];
-    onScene && onScene(yOffset);
+    const { onScene, scrollHeight } = this.sceneInfos[sceneIndex];
+    onScene && onScene(yOffset, yOffset / scrollHeight);
   }
 
   private scrollLoop = () => {

@@ -43,6 +43,7 @@ const IndexPage: FC = () => {
       onScene: onFirstSceneHandler.current,
     }, {
       type: 'normal',
+      scale: 1,
       container: secondIndexPageContainerRef.current,
       onScene: onSecondSceneHandler.current,
     }, {
