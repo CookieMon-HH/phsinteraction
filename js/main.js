@@ -17,9 +17,14 @@
                 messageA: document.querySelector('#scroll-section-0 .main-message.a'),
                 messageB: document.querySelector('#scroll-section-0 .main-message.b'),
                 messageC: document.querySelector('#scroll-section-0 .main-message.c'),
-                messageD: document.querySelector('#scroll-section-0 .main-message.d')
+                messageD: document.querySelector('#scroll-section-0 .main-message.d'),
+                canvas: document.querySelector('#video-canvas-0'),
+                context: document.querySelector('#video-canvas-0').getContext('2d'),
+                videoImages:[]
             },
             values: {
+                videoImageCount: 300,
+                imageSequence: [0,299],
                 messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
                 messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
                 messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
@@ -94,6 +99,16 @@
         },
 
     ];
+    
+    function setCanvasImages(){
+        let imgElem;
+        for(let i=0; i < sceneInfo[0].values.videoImageCount; i++){
+            imgElem = new Image();  //document.createElement('img')도 가능
+            imgElem.src = `./video/001/IMG_${6726 + i}.JPG`;
+            sceneInfo[0].objs.videoImages.push(imgElem);
+        }
+    }
+    setCanvasImages();
 
     function setLayout() {
         //각 스크룔 섹션의 높이 세팅
@@ -156,11 +171,14 @@
         const scrollHeight = sceneInfo[currentScene].scrollHeight;
         const scrollRatio = currentYOffset / scrollHeight;
 
-        console.log(currentScene,currentYOffset,scrollHeight,scrollRatio);
+        // console.log(currentScene,currentYOffset,scrollHeight,scrollRatio);
 
         switch(currentScene) {
             case 0:
                 // console.log('0 play');
+                let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+                objs.context.drawImage(objs.videoImages[sequence],0,0);
+
                 if(scrollRatio <= 0.22) {
                     objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
                     objs.messageA.style.transform = `translate3d(0, ${calcValues(values.messageA_translateY_in, currentYOffset)}%, 0)`;
@@ -281,3 +299,28 @@
 // 스크롤 영역을 배열로 지정
 // 함수를 선언하고 바로 호출
 // 함수 밖에 선언한 변수들은 전역변수, 다른 파일에서 접근 가능하기 때문에 함수안에 지역변수로 선언
+
+
+//2022.2.6 참고 사항 : 고화질 비디오 부드럽게 처리하기 
+// 고화질의 영상을 그대로 사용하면 완전 버벅임, 아래 3가지 방법 설명 
+
+// <영상으로 하는 방법> 
+// 1. 영상를 가져옴 
+// 2. 스크롤 비율에 따라 video duration의 시간을 지정
+//  (requestAnimationFrame -> current time에 현재 재생 시간 넣기)
+
+// <이미지로 하는 방법> 
+// 영상에서 프레임을 쪼개서 이미지로 만들어서 사용 
+// 1. 이미지를 가져옴 (전부 로드) 
+// 2. 스크롤 비율에 따라 노출 사진 no.를 지정 
+
+// 동영상 프레임 추출 검색 ㄱㄱ
+
+// <캔버스에 그리는 방법> 
+// <참고 : 캔버스 객체 기본>
+// 캔버스 객체 가져옴(query selector) -> getcontext호출하여 context 객체 가져오기 -> 컨텐스트 객체를 이용해서 그림
+
+// 기본적으로는 이미지로 하는 방법과 절차는 유사
+// 이미지방식은 src 속성을 변경, 이번엔 컨텍스트 객체의 drawImage method를 통해 캔버스에 그려줌\
+//drawImages(이미지,x,y) 이용하여 그려줌
+

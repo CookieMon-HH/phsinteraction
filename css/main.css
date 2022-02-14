@@ -23,6 +23,7 @@ a{
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 10;
     width: 100%;  /*postion~width는 scene no. 계산시 메뉴 길이는 반영되지 않도록 하기 위함(공간차지 하지 않도록)*/
     height : 44px;
     padding: 0 1rem;
@@ -31,6 +32,7 @@ a{
     position: absolute;
     top: 45px;
     left: 0;
+    z-index: 11;
     width: 100%;  /*postion~width는 scene no. 계산시 메뉴 길이는 반영되지 않도록 하기 위함*/
     height: 52px;
     height: 52px;
@@ -107,6 +109,7 @@ a{
 .desc-message {
     width : 50%;
     font-weight : bold;
+    opacity: 0;
 }
 .pin {
     width : 1px;
@@ -160,6 +163,11 @@ a{
 #show-scene-2 #scroll-section-2 .sticky-elem,
 #show-scene-3 #scroll-section-3 .sticky-elem{
     display: block;
+}
+
+.sticky-elem-canvas{
+    top: 0;
+    background: #ccc;
 }
 
 @media (min-width: 1024px){
