@@ -4,6 +4,7 @@ import IStickySection from "../../interfaces/IStickySection";
 import { MixinStickyMessage, MixinIndexPageMainMessageStyle, MixinIndexPageSectionFrameStyle, MixinMedia1024 } from "../../styles/indexPage/IndexPageStyles";
 import AnimationCalculator, { IAnimaitonInOutProps, IAnimaitonProps } from "../../utils/AnimationCalculator";
 import { SCENE_ACTIVE_CLASS_NAME } from "../../utils/SceneController";
+import { FirstIndexPageSectionAnimation } from "./const/SectionAnimations";
 
 const SticyElemMainMessageDiv = styled.div`
   ${MixinIndexPageMainMessageStyle};
@@ -29,29 +30,41 @@ const Frame = styled.section`
   }
 `;
 
-const firstMessageOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.1, endRatio: 0.2 };
-const firstMessageOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.25, endRatio: 0.3 };
-const firstMessageOpacityInOut: IAnimaitonInOutProps = { in: firstMessageOpacityIn, out: firstMessageOpacityOut, turningRatio: 0.225 };
-
-const firstMessageTranslateYIn: IAnimaitonProps = { from: 20, to: 1, startRatio: 0.1, endRatio: 0.2 };
-const firstMessageTranslateYOut: IAnimaitonProps = { from: 0, to: -20, startRatio: 0.25, endRatio: 0.3 };
-const firstMessageTranslateYInOut: IAnimaitonInOutProps = { in: firstMessageTranslateYIn, out: firstMessageTranslateYOut, turningRatio: 0.225 };
-
 const FirstIndexPageSection: FC<IStickySection> = ((props) => {
   const { containerRef, onScene } = props;
   const firstMessageRef = useRef<HTMLDivElement>(null);
+  const secondMessageRef = useRef<HTMLDivElement>(null);
+  const thirdMessageRef = useRef<HTMLDivElement>(null);
+  const forthMessageRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if(!onScene) return;
-    onScene.current = (yOffset: number, ratio: number) => {
-      firstMessageAnimation(ratio);
+    onScene.current = (_: number, ratio: number) => {
+      addMessageAnimations(ratio);
     };
   }, [onScene]);
 
-  const firstMessageAnimation = (ratio: number) => {
-    if(!firstMessageRef.current) return;
+  const addMessageAnimations = (ratio: number) => {
+    if(!firstMessageRef.current ||
+      !secondMessageRef.current ||
+      !thirdMessageRef.current ||
+      !forthMessageRef.current) return;
+    const { firstMessageAOpacityInOut, firstMessageATranslateYInOut,
+            firstMessageBOpacityInOut, firstMessageBTranslateYInOut,
+            firstMessageCOpacityInOut, firstMessageCTranslateYInOut,
+            firstMessageDOpacityInOut, firstMessageDTranslateYInOut } = FirstIndexPageSectionAnimation;
     const { opacityAnimationInOut, translateYAnimationInOut } = AnimationCalculator;
-    opacityAnimationInOut(firstMessageRef.current, firstMessageOpacityInOut, ratio);
-    translateYAnimationInOut(firstMessageRef.current, firstMessageTranslateYInOut, ratio);
+    const aniArr: [HTMLDivElement, IAnimaitonInOutProps, IAnimaitonInOutProps][] = [
+      [firstMessageRef.current, firstMessageAOpacityInOut, firstMessageATranslateYInOut],
+      [secondMessageRef.current, firstMessageBOpacityInOut, firstMessageBTranslateYInOut],
+      [thirdMessageRef.current, firstMessageCOpacityInOut, firstMessageCTranslateYInOut],
+      [forthMessageRef.current, firstMessageDOpacityInOut, firstMessageDTranslateYInOut],
+    ];
+    for(const ani of aniArr) {
+      const [current, opacity, translate] = ani;
+      opacityAnimationInOut(current, opacity, ratio);
+      translateYAnimationInOut(current, translate, ratio);
+    };
   };
 
   return (
@@ -60,13 +73,13 @@ const FirstIndexPageSection: FC<IStickySection> = ((props) => {
       <SticyElemMainMessageDiv ref={firstMessageRef}>
         <p>온전히 빠져들게 하는<br />최고급 세라믹</p>
       </SticyElemMainMessageDiv>
-      <SticyElemMainMessageDiv>
+      <SticyElemMainMessageDiv ref={secondMessageRef}>
         <p>주변 맛을 느끼게 해주는<br />주변 맛 허용 모드</p>
       </SticyElemMainMessageDiv>
-      <SticyElemMainMessageDiv>
+      <SticyElemMainMessageDiv ref={thirdMessageRef}>
         <p>온종일 편안한<br />맞춤형 손잡이</p>
       </SticyElemMainMessageDiv>
-      <SticyElemMainMessageDiv>
+      <SticyElemMainMessageDiv ref={forthMessageRef}>
         <p>새롭게 입가를<br />찾아온 매혹</p>
       </SticyElemMainMessageDiv>
     </Frame>

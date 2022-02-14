@@ -39,10 +39,16 @@ const AnimationCalculator = (() => {
     element.style.transform = `translateY(${translateY}%)`;
   };
 
+  const scaleYAnimationInOut = (element: HTMLElement, animationInOutProps: IAnimaitonInOutProps, currentRatio: number) => {
+    const scaleY = _getValuePerRatioFromTurningRatio(animationInOutProps, currentRatio);
+    element.style.transform = `scaleY(${scaleY})`;
+  };
+
   return {
     getValuePerRatio,
     opacityAnimationInOut,
     translateYAnimationInOut,
+    scaleYAnimationInOut,
   }
 })();
 
