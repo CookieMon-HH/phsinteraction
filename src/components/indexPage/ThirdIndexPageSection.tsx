@@ -46,12 +46,26 @@ const SticyElemDescriptionMessageDiv = styled.div`
   `)};
 `;
 
+const CanvasFrame = styled.div`
+  ${MixinStickyMessage};
+  top: 0;
+  width: 100%;
+  height: 100%;
+  canvas {
+    position: absolute;
+    transform: translate3d(-50%, -50%, 0px) scale(0.730556);
+    top: 50%;
+    left: 50%;
+  }
+`;
+
 const Frame = styled.section`
   ${MixinIndexPageSectionFrameStyle};
 
   &.${SCENE_ACTIVE_CLASS_NAME} {
     ${SticyElemMainMessageDiv},
-    ${SticyElemDescriptionMessageDiv} {
+    ${SticyElemDescriptionMessageDiv},
+    ${CanvasFrame} {
       display: block;
     }
   }
@@ -72,13 +86,15 @@ const ThirdIndexPageSection: FC<IStickySection> = ((props) => {
   const firstPinRef = useRef<HTMLDivElement>(null);
   const secondPinRef = useRef<HTMLDivElement>(null);
   
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
     if(!onScene) return;
-    onScene.current = (yOffset: number) => console.log('aaaaa3333 :', yOffset);
-
+    const addCanvasAnimation = getAddCanvasAnimationFunction();
     onScene.current = (_: number, ratio: number) => {
       addMessageAnimations(ratio);
       addPinAnimations(ratio);
+      addCanvasAnimation(ratio);
     };
   }, [onScene]);
 
@@ -119,8 +135,28 @@ const ThirdIndexPageSection: FC<IStickySection> = ((props) => {
     };
   };
 
+  const getAddCanvasAnimationFunction = () => {
+    const imageCount = 960;
+    const images: HTMLImageElement[] = [];
+		for (let i = 0; i < imageCount; i++) {
+			const imgElem = new Image();
+			imgElem.src = `/assets/images/002/IMG_${7027 + i}.JPG`;
+			images.push(imgElem);
+		}
+    return (ratio: number) => {
+      if(!canvasRef.current) return;
+      const { thirdCanvasOpacityInOut } = ThirdIndexPageSectionAnimation;
+      const { opacityAnimationInOut, canvasPlay } = AnimationCalculator;
+      opacityAnimationInOut(canvasRef.current, thirdCanvasOpacityInOut, ratio);
+      canvasPlay(canvasRef.current, images, ratio);
+    };
+  };
+
   return (
     <Frame ref={containerRef}>
+      <CanvasFrame>
+        <canvas ref={canvasRef} width='1920' height='1080' />
+      </CanvasFrame>
       <SticyElemMainMessageDiv ref={firstMessageRef}>
         <p>
           <small>편안한 촉감</small>  

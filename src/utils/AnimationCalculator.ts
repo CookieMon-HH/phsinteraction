@@ -44,11 +44,28 @@ const AnimationCalculator = (() => {
     element.style.transform = `scaleY(${scaleY})`;
   };
 
+  const canvasPlay = (element: HTMLCanvasElement, images: HTMLImageElement[], currentRatio: number) => {
+    const { length } = images;
+    const animationProps: IAnimaitonProps = { from: 0, to: 1, startRatio: 0, endRatio: 1 };
+    const index = Math.round(length * getValuePerRatio(animationProps, currentRatio));
+    const inBoundIndex = Math.max(0, Math.min(index, length-1));
+    const image = images[inBoundIndex];
+    if(image.complete) {
+      element.getContext('2d')?.drawImage(image, 0, 0);
+    } else {
+      image.onload = () => {
+        element.getContext('2d')?.drawImage(image, 0, 0);
+      }
+    }
+    
+  };
+
   return {
     getValuePerRatio,
     opacityAnimationInOut,
     translateYAnimationInOut,
     scaleYAnimationInOut,
+    canvasPlay,
   }
 })();
 

@@ -4,6 +4,7 @@ const firstMessageAOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.
 const firstMessageBOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.3, endRatio: 0.4 };
 const firstMessageCOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.5, endRatio: 0.6 };
 const firstMessageDOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.7, endRatio: 0.8 };
+const firstCanvasOpacity: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.9, endRatio: 1 };
 
 const firstMessageAOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.25, endRatio: 0.3 };
 const firstMessageBOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.45, endRatio: 0.5 };
@@ -29,6 +30,7 @@ const firstMessageATranslateYInOut: IAnimaitonInOutProps = { in: firstMessageATr
 const firstMessageBTranslateYInOut: IAnimaitonInOutProps = { in: firstMessageBTranslateYIn, out: firstMessageBTranslateYOut, turningRatio: 0.42 };
 const firstMessageCTranslateYInOut: IAnimaitonInOutProps = { in: firstMessageCTranslateYIn, out: firstMessageCTranslateYOut, turningRatio: 0.62 };
 const firstMessageDTranslateYInOut: IAnimaitonInOutProps = { in: firstMessageDTranslateYIn, out: firstMessageDTranslateYOut, turningRatio: 0.82 };
+const firstCanvasOpacityInOut: IAnimaitonInOutProps = { in: firstCanvasOpacity, out: firstCanvasOpacity, turningRatio: 1 };
 
 const FirstIndexPageSectionAnimation = {
   firstMessageAOpacityInOut,
@@ -39,19 +41,23 @@ const FirstIndexPageSectionAnimation = {
   firstMessageBTranslateYInOut,
   firstMessageCTranslateYInOut,
   firstMessageDTranslateYInOut,
+  firstCanvasOpacityInOut,
 };
 
 const thirdMessageAOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.15, endRatio: 0.2 };
 const thirdMessageBOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.5, endRatio: 0.55 };
 const thirdMessageCOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.72, endRatio: 0.77 };
+const thirdCanvasOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0, endRatio: 0.1 };
 
 const thirdMessageAOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.3, endRatio: 0.35 };
 const thirdMessageBOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.58, endRatio: 0.63 };
 const thirdMessageCOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.85, endRatio: 0.9 };
+const thirdCanvasOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.95, endRatio: 1 };
 
 const thirdMessageAOpacityInOut: IAnimaitonInOutProps = { in: thirdMessageAOpacityIn, out: thirdMessageAOpacityOut, turningRatio: 0.25 };
 const thirdMessageBOpacityInOut: IAnimaitonInOutProps = { in: thirdMessageBOpacityIn, out: thirdMessageBOpacityOut, turningRatio: 0.57 };
 const thirdMessageCOpacityInOut: IAnimaitonInOutProps = { in: thirdMessageCOpacityIn, out: thirdMessageCOpacityOut, turningRatio: 0.83 };
+const thirdCanvasOpacityInOut: IAnimaitonInOutProps = { in: thirdCanvasOpacityIn, out: thirdCanvasOpacityOut, turningRatio: 0.5 };
 
 const thirdMessageATranslateYIn: IAnimaitonProps = { from: 20, to: 0, startRatio: 0.15, endRatio: 0.2 };
 const thirdMessageBTranslateYIn: IAnimaitonProps = { from: 30, to: 0, startRatio: 0.5, endRatio: 0.55 };
@@ -80,6 +86,7 @@ const thirdPinCOpacityInOut: IAnimaitonInOutProps = { in: thirdPinCOpacityIn, ou
 const thirdPinBScaleYInOut: IAnimaitonInOutProps = { in: thirdPinBScaleYIn, out: thirdPinBScaleYIn, turningRatio: 0.57 };
 const thirdPinCScaleYInOut: IAnimaitonInOutProps = { in: thirdPinCScaleYIn, out: thirdPinCScaleYIn, turningRatio: 0.83 };
 
+
 const ThirdIndexPageSectionAnimation = {
   thirdMessageAOpacityInOut,
   thirdMessageBOpacityInOut,
@@ -91,6 +98,7 @@ const ThirdIndexPageSectionAnimation = {
   thirdPinCOpacityInOut,
   thirdPinBScaleYInOut,
   thirdPinCScaleYInOut,
+  thirdCanvasOpacityInOut,
 };
 
 const ForthIndexPageSectionAnimation = {
