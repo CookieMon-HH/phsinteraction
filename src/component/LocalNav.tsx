@@ -10,6 +10,7 @@ const Frame = styled.nav`
   height: 52px;
   padding: 0 1rem;
   border-bottom: 1px solid #ddd;
+  z-index : 101;
 `;
 
 const LinksFrameDiv = styled.div`

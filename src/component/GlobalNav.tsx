@@ -9,6 +9,7 @@ const Frame = styled.nav`
   width : 100%;
   height : 44px;
   padding: 0 1rem;
+  z-index : 100;
 `;
 
 const LinksFrameDiv = styled.div`

@@ -149,6 +149,15 @@ const _Section = styled.section`
   }
 `
 
+const _CanvasDiv = styled.div`
+  display: none;
+  position : fixed;
+  left: 0%;
+  width: 100%;
+  top : 0;
+  background : #ccc;
+`
+
 const PageSection: FC = (() => {
   const firstSceneContainerRef = useRef<HTMLElement>(null);
   const secondSceneContainerRef = useRef<HTMLElement>(null);
@@ -165,10 +174,13 @@ const PageSection: FC = (() => {
   const messageC_3 = useRef<HTMLDivElement>(null);
   const messageD_3 = useRef<HTMLDivElement>(null);
   
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
   useEffect(() => {
     if (!firstSceneContainerRef.current || !secondSceneContainerRef.current || !thirdSceneContainerRef.current || !fourthSceneContainerRef.current) return;
     if (!messageA_1.current || !messageB_1.current || !messageC_1.current || !messageD_1.current) return;
     if (!messageA_3.current || !messageB_3.current || !messageC_3.current) return;
+    if (!canvasRef.current) return ;
     const sceneUtil = new SceneUtil([{
       type: 'sticky',
       container: firstSceneContainerRef.current,
@@ -265,7 +277,8 @@ const PageSection: FC = (() => {
             endRatio: 0.9
           }
         },
-      }
+      },
+      canvas : canvasRef.current
     }, {
       type: 'normal',
       container: secondSceneContainerRef.current,
@@ -381,6 +394,9 @@ const PageSection: FC = (() => {
     <Frame>
       <_Section ref={firstSceneContainerRef}>
         <h1>AirMug Pro</h1>
+        <_CanvasDiv>
+          <canvas width={1920} height={1080} ref={canvasRef}/>
+        </_CanvasDiv>
         <ElementDiv ref={messageA_1}>
           <p>온전히 빠져들게 하는<br/>최고급 세라믹</p>
         </ElementDiv>

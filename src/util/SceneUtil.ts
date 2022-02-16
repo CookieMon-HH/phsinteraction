@@ -4,6 +4,7 @@ interface IScene {
   type: SceneType;
   container: HTMLElement;
   messageGroup?: IMessageGroup;
+  canvas? : HTMLCanvasElement;
 }
 
 interface IMessage {
@@ -30,9 +31,13 @@ interface IOpacity {
 interface ITranslate extends IOpacity {
 };
 
+interface ICanvasImgSeq extends IOpacity {};
+
 interface ISceneInfoObj {
   container: HTMLElement;
   messageGroup?: IMessageGroup;
+  canvas?: HTMLCanvasElement;
+  canvasSequence? : ICanvasImgSeq;
 }
 
 interface ISceneInfo {
@@ -48,6 +53,7 @@ class SceneUtil {
   static sceneInfo: ISceneInfo[];
   static prevScrollHeight = 0;
   private static currentActiveScene: HTMLElement;
+  static firstSceneImages: HTMLImageElement[] = [];
   
   constructor(data: IScene[]) {
     SceneUtil.sceneInfo = data.map((scene: IScene) => ({
@@ -57,11 +63,18 @@ class SceneUtil {
       obj: {
         container: scene.container,
         messageGroup: scene.messageGroup,
+        canvas : scene.canvas,
+        canvasSequence : {
+          range : [0, 1],
+          startRatio : 0,
+          endRatio : 1
+        }
       }
     }));
     SceneUtil.currentActiveScene = SceneUtil.sceneInfo[0].obj.container;
     SceneUtil.currentActiveScene.classList.add(ACTIVE_SCENE_CLASS_NAME);
     SceneUtil.setLayout();
+    SceneUtil.setCanvasImages();
   }
   
   static setLayout = () => {
@@ -84,7 +97,7 @@ class SceneUtil {
     return sceneLength - 1;
   }
   
-  private static calcValues = (values: IOpacity | ITranslate, pageYOffset: number) => {
+  private static calcValues = (values: IOpacity | ITranslate | ICanvasImgSeq, pageYOffset: number) => {
     const scrollHeight = SceneUtil.currentActiveScene.scrollHeight;
     const minValue = values.range[0];
     const maxValue = values.range[1];
@@ -101,12 +114,26 @@ class SceneUtil {
     }
   }
   
+  private static setCanvasImages() {
+    for(let i = 0; i < 300; ++i) {
+      const imgElem = new Image();
+      imgElem.src = `/assets/images/001/IMG_${6726 + i}.JPG`;
+      SceneUtil.firstSceneImages.push(imgElem);
+    }
+  }
+  
   private static playAnimation = (currentSceneIndex: number) => {
     const {pageYOffset} = window;
     switch (currentSceneIndex) {
       case 0:
         const firstGroup = SceneUtil.sceneInfo[currentSceneIndex].obj.messageGroup;
-        if (firstGroup === undefined) return;
+        const firstCanvas = SceneUtil.sceneInfo[currentSceneIndex].obj.canvas;
+        const firstCanvasSeq = SceneUtil.sceneInfo[currentSceneIndex].obj.canvasSequence;
+        if (firstGroup === undefined || firstCanvas === undefined || firstCanvasSeq === undefined) return;
+        const context = firstCanvas.getContext('2d');
+        if(!context) return;
+        const seq = Math.round(SceneUtil.calcValues(firstCanvasSeq, pageYOffset) * 300);
+        context.drawImage(SceneUtil.firstSceneImages[seq], 0, 0);
         const firstGroupRatio = pageYOffset / SceneUtil.currentActiveScene.scrollHeight;
         firstGroup.messageA.message.style.opacity = firstGroupRatio <= 0.22 ? SceneUtil.calcValues(firstGroup.messageA.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageA.opacityOut, pageYOffset).toString();
         firstGroup.messageB.message.style.opacity = firstGroupRatio <= 0.42 ? SceneUtil.calcValues(firstGroup.messageB.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageB.opacityOut, pageYOffset).toString();
