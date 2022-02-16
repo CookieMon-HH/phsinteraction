@@ -176,7 +176,7 @@
                 // console.log('0 play');
                 let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
                 //console.log(objs.videoImages[sequence]);
-                objs.context.drawImage(objs.videoImages[sequence], -500, -500);
+                objs.context.drawImage(objs.videoImages[sequence], 0,0);
                 //console.log(objs.context);
 
                 if (scrollRatio <= 0.22) {
