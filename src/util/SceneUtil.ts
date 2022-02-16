@@ -132,7 +132,7 @@ class SceneUtil {
         if (firstGroup === undefined || firstCanvas === undefined || firstCanvasSeq === undefined) return;
         const context = firstCanvas.getContext('2d');
         if(!context) return;
-        const seq = Math.round(SceneUtil.calcValues(firstCanvasSeq, pageYOffset) * 300);
+        const seq = Math.round(SceneUtil.calcValues(firstCanvasSeq, pageYOffset) * 300) | 0;
         context.drawImage(SceneUtil.firstSceneImages[seq], 0, 0);
         const firstGroupRatio = pageYOffset / SceneUtil.currentActiveScene.scrollHeight;
         firstGroup.messageA.message.style.opacity = firstGroupRatio <= 0.22 ? SceneUtil.calcValues(firstGroup.messageA.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageA.opacityOut, pageYOffset).toString();

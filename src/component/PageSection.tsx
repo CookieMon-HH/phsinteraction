@@ -7,6 +7,8 @@ const Frame = styled.section`
   adding-top: 50vh;
   ${fonts.REGULAR}
   h1 {
+    position: relative;
+    z-index: 5;
     font-size: 4rem;
     text-align: center;
     
@@ -155,7 +157,6 @@ const _CanvasDiv = styled.div`
   left: 0%;
   width: 100%;
   top : 0;
-  background : #ccc;
 `
 
 const PageSection: FC = (() => {
@@ -393,7 +394,7 @@ const PageSection: FC = (() => {
   return (
     <Frame>
       <_Section ref={firstSceneContainerRef}>
-        <h1>AirMug Pro</h1>
+        <h1 >AirMug Pro</h1>
         <_CanvasDiv>
           <canvas width={1920} height={1080} ref={canvasRef}/>
         </_CanvasDiv>
