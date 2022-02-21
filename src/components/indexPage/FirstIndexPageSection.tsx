@@ -20,7 +20,6 @@ const CanvasFrame = styled.div`
   height: 100%;
   canvas {
     position: absolute;
-    transform: translate3d(-50%, -50%, 0px) scale(0.730556);
     top: 50%;
     left: 50%;
   }
@@ -48,12 +47,11 @@ const Frame = styled.section`
 `;
 
 const FirstIndexPageSection: FC<IStickySection> = ((props) => {
-  const { containerRef, onScene } = props;
+  const { containerRef, canvasRef, onScene } = props;
   const firstMessageRef = useRef<HTMLDivElement>(null);
   const secondMessageRef = useRef<HTMLDivElement>(null);
   const thirdMessageRef = useRef<HTMLDivElement>(null);
   const forthMessageRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if(!onScene) return;
@@ -96,7 +94,7 @@ const FirstIndexPageSection: FC<IStickySection> = ((props) => {
 			images.push(imgElem);
 		}
     return (ratio: number) => {
-      if(!canvasRef.current) return;
+      if(!canvasRef?.current) return;
       const { firstCanvasOpacityInOut } = FirstIndexPageSectionAnimation;
       const { opacityAnimationInOut, canvasPlay } = AnimationCalculator;
       opacityAnimationInOut(canvasRef.current, firstCanvasOpacityInOut, ratio);

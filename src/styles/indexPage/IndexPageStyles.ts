@@ -5,6 +5,7 @@ const MixinMedia1024 = (cssText: string) => `
 `;
 
 const MixinIndexPageSectionFrameStyle = `
+  position: relative;
   padding-top: 50vh;
 `;
 

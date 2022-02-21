@@ -86,7 +86,6 @@ const thirdPinCOpacityInOut: IAnimaitonInOutProps = { in: thirdPinCOpacityIn, ou
 const thirdPinBScaleYInOut: IAnimaitonInOutProps = { in: thirdPinBScaleYIn, out: thirdPinBScaleYIn, turningRatio: 0.57 };
 const thirdPinCScaleYInOut: IAnimaitonInOutProps = { in: thirdPinCScaleYIn, out: thirdPinCScaleYIn, turningRatio: 0.83 };
 
-
 const ThirdIndexPageSectionAnimation = {
   thirdMessageAOpacityInOut,
   thirdMessageBOpacityInOut,

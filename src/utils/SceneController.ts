@@ -4,12 +4,14 @@ export type SceneFunction = (yOffset: number, ratio: number) => void;
 interface IScene {
   type: SceneType;
   container: HTMLElement;
+  canvas?: HTMLCanvasElement;
   scale?: number;
   onScene?: SceneFunction;
 }
 
 interface ISceneObjs {
   container: HTMLElement;
+  canvas?: HTMLCanvasElement;
 }
 
 interface ISceneInfo {
@@ -33,6 +35,7 @@ class SceneController {
       scrollHeight: 0,
       objs: {
         container: scene.container,
+        canvas: scene.canvas,
       },
       onScene: scene.onScene,
     }));
@@ -43,8 +46,13 @@ class SceneController {
 
   private setLayout = () => {
     this.sceneInfos.forEach((sceneInfo: ISceneInfo) => {
+      const { container, canvas } = sceneInfo.objs;
       sceneInfo.scrollHeight = sceneInfo.scale * window.innerHeight;
-      sceneInfo.objs.container.style.height = `${sceneInfo.scrollHeight}px`;
+      container.style.height = `${sceneInfo.scrollHeight}px`;
+      const canvasHeightRatio = window.innerHeight / 1080;
+      if(canvas) {
+        canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${canvasHeightRatio})`;
+      }
     })
   }
 

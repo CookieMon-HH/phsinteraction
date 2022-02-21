@@ -16,8 +16,10 @@ const Frame = styled.div`
 
 const IndexPage: FC = () => {
   const firstIndexPageContainerRef = useRef<HTMLElement>(null);
+  const firstIndexPageCanvasRef = useRef<HTMLCanvasElement>(null);
   const secondIndexPageContainerRef = useRef<HTMLElement>(null);
   const thirdIndexPageContainerRef = useRef<HTMLElement>(null);
+  const thirdIndexPageCanvasRef = useRef<HTMLCanvasElement>(null);
   const forthIndexPageContainerRef = useRef<HTMLElement>(null);
   
   const onFirstSceneHandler: React.MutableRefObject<SceneFunction | undefined> = useRef<SceneFunction | undefined>();
@@ -29,17 +31,22 @@ const IndexPage: FC = () => {
     const isInValidAllContainRef =  !firstIndexPageContainerRef.current ||
                                     !secondIndexPageContainerRef.current ||
                                     !thirdIndexPageContainerRef.current ||
-                                    !forthIndexPageContainerRef.current
+                                    !forthIndexPageContainerRef.current;
 
     const isInValidAllSceneHandlerRef =  !onFirstSceneHandler.current ||
                                           !onSecondSceneHandler.current ||
                                           !onThirdSceneHandler.current ||
-                                          !onForthSceneHandler.current
+                                          !onForthSceneHandler.current;
+
+    const isInValidAllCanvasRef = !firstIndexPageCanvasRef.current ||
+                                  !thirdIndexPageCanvasRef.current;
     if (isInValidAllContainRef) return;
     if (isInValidAllSceneHandlerRef) return;
+    if (isInValidAllCanvasRef) return;
     const sceneController = new SceneController({
       type: 'sticky',
       container: firstIndexPageContainerRef.current,
+      canvas: firstIndexPageCanvasRef.current,
       onScene: onFirstSceneHandler.current,
     }, {
       type: 'normal',
@@ -49,6 +56,7 @@ const IndexPage: FC = () => {
     }, {
       type: 'sticky',
       container: thirdIndexPageContainerRef.current,
+      canvas: thirdIndexPageCanvasRef.current,
       onScene: onThirdSceneHandler.current,
     }, {
       type: 'sticky',
@@ -69,6 +77,7 @@ const IndexPage: FC = () => {
       <LocalNavigation />
       <FirstIndexPageSection
         containerRef={firstIndexPageContainerRef}
+        canvasRef={firstIndexPageCanvasRef}
         onScene={onFirstSceneHandler}
       />
       <SecondIndexPageSection
@@ -77,6 +86,7 @@ const IndexPage: FC = () => {
       />
       <ThirdIndexPageSection
         containerRef={thirdIndexPageContainerRef}
+        canvasRef={thirdIndexPageCanvasRef}
         onScene={onThirdSceneHandler}
       />
       <FourthIndexPageSection
