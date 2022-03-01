@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const Frame = styled.nav`
@@ -10,6 +10,11 @@ const Frame = styled.nav`
   padding: 0 1rem;
   border-bottom: 1px solid #ddd;
 	z-index: 11;
+  &.sticky {
+    position: fixed;
+    top: 0;
+    backdrop-filter: saturate(180%) blur(15px);
+  }
 `;
 
 const LinksFrameDiv = styled.div`
@@ -34,8 +39,26 @@ const LinkALogo = styled(LinkA)`
 `;
 
 const LocalNavigation: FC = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    window.addEventListener('scroll', onStickyHandler);
+    return () => {
+      window.removeEventListener('scroll', onStickyHandler);
+    }
+  }, []);
+
+  const onStickyHandler = () => {
+    const { pageYOffset } = window;
+    if (!ref.current) return;
+    if(pageYOffset < 44) {
+      ref.current.classList.remove('sticky');
+    } else {
+      ref.current.classList.add('sticky');
+    }
+  };
+
   return (
-    <Frame>
+    <Frame ref={ref}>
       <LinksFrameDiv>
         <LinkALogo href="#">AirMug Pro</LinkALogo>
         <LinkA href="#">개요</LinkA>

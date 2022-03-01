@@ -39,35 +39,45 @@ const CanvasCaptionP = styled.p`
 `;
 
 const CanvasImageBlend = styled.canvas`
-  border: 3px solid red;
-
+  &.sticky {
+    position: fixed;
+  }
 `;
 
 const FourthIndexPageSection: FC<IStickySection> = ((props) => {
   const { containerRef, onScene } = props;
   const firstCanvasBlendRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(new Image());
+  const image2Ref = useRef<HTMLImageElement>(new Image());
+  const captionRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     if(!onScene) return;
+    const canvasStickyHandler = getCanvasStickyHandler();
     onScene.current = (yOffset: number, ratio: number) => {
       const scrollHeight = yOffset / ratio;
-      addCanvasBlenAnimation(ratio, scrollHeight);
+      addBaseCanvasAnimation(ratio, scrollHeight);
+      canvasStickyHandler(ratio, scrollHeight);
     };
     setFirstCanvasImage();
   }, [onScene]);
 
-  const addCanvasBlenAnimation = (ratio: number, scrollHeight: number) => {
-    const canvasBlend = firstCanvasBlendRef.current;
-    if(!canvasBlend) return;
-    const widthRatio = window.innerWidth / canvasBlend.width;
-    const heightRatio = window.innerHeight / canvasBlend.height;
+  const getCanvasScaleRatio = (canvas: HTMLCanvasElement) => {
+    const widthRatio = window.innerWidth / canvas.width;
+    const heightRatio = window.innerHeight / canvas.height;
     let canvasScaleRatio;
     if(widthRatio <= heightRatio) {
       canvasScaleRatio = heightRatio;
     } else {
       canvasScaleRatio = widthRatio;
     }
+    return canvasScaleRatio;
+  };
+
+  const addBaseCanvasAnimation = (ratio: number, scrollHeight: number) => {
+    const canvasBlend = firstCanvasBlendRef.current;
+    if(!canvasBlend) return;
+    const canvasScaleRatio = getCanvasScaleRatio(canvasBlend);
 
     const recalculatedInnerWidth = window.innerWidth / canvasScaleRatio;
     const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
@@ -93,18 +103,94 @@ const FourthIndexPageSection: FC<IStickySection> = ((props) => {
     context.fillStyle = 'white';
     if(imageRef.current.complete) {
       context.drawImage(imageRef.current, 0, 0);
+      context.fillRect(Math.floor(AnimationCalculator.getValuePerRatio(rect1X, ratio)), 0, Math.floor(whiteRectWidth), recalculatedInnerWidth);
+      context.fillRect(Math.floor(AnimationCalculator.getValuePerRatio(rect2X, ratio)), 0, Math.floor(whiteRectWidth), recalculatedInnerHeight);
+    } else {
+      imageRef.current.onload = () => {
+        context.drawImage(imageRef.current, 0, 0);
+        context.fillRect(Math.floor(AnimationCalculator.getValuePerRatio(rect1X, ratio)), 0, Math.floor(whiteRectWidth), recalculatedInnerWidth);
+        context.fillRect(Math.floor(AnimationCalculator.getValuePerRatio(rect2X, ratio)), 0, Math.floor(whiteRectWidth), recalculatedInnerHeight);
+      }
     }
-    context?.fillRect(Math.floor(AnimationCalculator.getValuePerRatio(rect1X, ratio)), 0, Math.floor(whiteRectWidth), recalculatedInnerWidth);
-    context?.fillRect(Math.floor(AnimationCalculator.getValuePerRatio(rect2X, ratio)), 0, Math.floor(whiteRectWidth), recalculatedInnerHeight);
   };
 
   const setFirstCanvasImage = () => {
     imageRef.current.src = `/assets/images/blend-image-1.jpg`;
-    console.log('??!');
-    imageRef.current.onload = () => {
-      if(!firstCanvasBlendRef.current) return;
-      firstCanvasBlendRef.current.getContext('2d')?.drawImage(imageRef.current, 0, 0);
-    }
+    image2Ref.current.src = `/assets/images/blend-image-2.jpg`;
+    const isLowerCanvas = (firstCanvasBlendRef.current?.getBoundingClientRect().top || 1) > 0;
+    if(isLowerCanvas) {
+      imageRef.current.onload = () => {
+        addBaseCanvasAnimation(0, containerRef?.current?.clientHeight || 0);
+      };
+    };
+  };
+
+  const getCanvasStickyHandler = () => {
+    const canvasBlend = firstCanvasBlendRef.current;
+    if(!canvasBlend) return (ratio: number, scrollHeight: number) => {};
+    const { width, height, offsetTop } = canvasBlend;
+    const canvasScaleRatio = getCanvasScaleRatio(canvasBlend);
+    const canvasScaleTop = (height - (height * canvasScaleRatio)) / 2;
+    const canvasStartY = offsetTop + canvasScaleTop;
+    
+    return (ratio: number, scrollHeight: number) => {
+      const canvasRatio = canvasStartY / scrollHeight;
+      if(ratio < canvasRatio) {
+        canvasBlend.classList.remove('sticky');
+      } else {
+        const context = canvasBlend.getContext('2d');
+        const blenAniProps: IAnimaitonProps = {
+          from: 0,
+          to: height,
+          startRatio: canvasStartY / scrollHeight,
+          endRatio: (canvasStartY / scrollHeight) + 0.2,
+        };
+        const blendHeight = AnimationCalculator.getValuePerRatio(blenAniProps, ratio);
+        context?.drawImage(image2Ref.current,
+          0, height - blendHeight, width, blendHeight,
+          0, height - blendHeight, width, blendHeight
+        );
+        canvasBlend.classList.add('sticky');
+        canvasBlend.style.top = `-${canvasScaleTop}px`;
+
+        const blenScaleAniProps: IAnimaitonProps = {
+          from: canvasScaleRatio,
+          to: document.body.offsetWidth / (1.5 * width),
+          startRatio: blenAniProps.endRatio,
+          endRatio: blenAniProps.endRatio + 0.2,
+        };
+
+        if(blenAniProps.endRatio < ratio) {
+          canvasBlend.style.transform = `scale(${AnimationCalculator.getValuePerRatio(blenScaleAniProps, ratio)})`;
+          canvasBlend.style.marginTop = `0`;
+        }
+        if (0 < blenScaleAniProps.endRatio && blenScaleAniProps.endRatio < ratio) {
+          canvasBlend.classList.remove('sticky');
+          canvasBlend.style.marginTop = `${scrollHeight * 0.4}px`;
+
+          const captionOpacityAniProps: IAnimaitonProps = {
+            from: 0,
+            to: 1,
+            startRatio: blenScaleAniProps.endRatio,
+            endRatio: blenScaleAniProps.endRatio + 0.1,
+          };
+          const captionTransformAniProps: IAnimaitonProps = {
+            from: 20,
+            to: 0,
+            startRatio: captionOpacityAniProps.startRatio,
+            endRatio: captionOpacityAniProps.endRatio,
+          };
+          if(captionRef.current) {
+            captionRef.current.style.opacity = `${AnimationCalculator.getValuePerRatio(captionOpacityAniProps, ratio)}`;
+            captionRef.current.style.transform = `translate3d(0, ${AnimationCalculator.getValuePerRatio(captionTransformAniProps, ratio)}%, 0)`;
+          }
+        } else {
+          if(captionRef.current) {
+            captionRef.current.style.opacity = '0';
+          }
+        }
+      }
+    };
   };
 
   return (
@@ -114,11 +200,9 @@ const FourthIndexPageSection: FC<IStickySection> = ((props) => {
 				아이디어를 광활하게 펼칠<br />
 				아름답고 부드러운 음료 공간.
       </MidMessageP>
-      <CanvasImageBlend ref={firstCanvasBlendRef} width='1920' height='1080'>
-
-      </CanvasImageBlend>
-      <CanvasCaptionP>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus magni iure dolore ipsa vitae ea natus accusamus suscipit rem et maiores odio, dignissimos repellendus velit voluptatem, eaque rerum ex voluptates!
+      <CanvasImageBlend ref={firstCanvasBlendRef} width='1920' height='1080' />
+      <CanvasCaptionP ref={captionRef}>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, tempora fugit esse ut ea temporibus iusto nostrum quo, accusamus neque amet nihil voluptatum sint laboriosam velit placeat, repellendus autem. Cum tenetur unde repellat vero odio, error repellendus harum, accusantium laudantium labore illo molestias fuga animi voluptatum iste. Earum doloribus maxime ullam ipsum atque reprehenderit eaque facere inventore rem, dolorem debitis temporibus necessitatibus sed iste eum modi qui ea, sit consequatur distinctio delectus! Saepe, esse? Quae eos ea accusantium corporis nam, voluptas omnis ullam amet nobis alias! Illum quo officia aspernatur! Ullam quibusdam, quasi expedita rerum neque perspiciatis recusandae numquam dolore.
       </CanvasCaptionP>
     </Frame>
   )
