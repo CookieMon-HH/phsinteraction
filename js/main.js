@@ -25,6 +25,7 @@
             values: {
                 videoImageCount: 300,
                 imageSequence: [0,299],
+                canvas_opcaity: [1,0, { start: 0.9, end: 1}],
                 messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
                 messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
                 messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
@@ -64,9 +65,16 @@
                 messageB: document.querySelector('#scroll-section-2 .b'),
                 messageC: document.querySelector('#scroll-section-2 .c'),
                 pinB: document.querySelector('#scroll-section-2 .b .pin'),
-                pinC: document.querySelector('#scroll-section-2 .c .pin')
+                pinC: document.querySelector('#scroll-section-2 .c .pin'),
+                canvas: document.querySelector('#video-canvas-1'),
+                context: document.querySelector('#video-canvas-1').getContext('2d'),
+                videoImages:[]
             },
             values: {
+            videoImageCount: 960,
+            imageSequence: [0,959],
+            canvas_opcaity_in: [0,1, { start: 0, end: 0.1}],
+            canvas_opcaity_out: [1,0, { start: 0.95, end: 1}],
             messageA_translateY_in: [20, 0, { start: 0.15, end: 0.2 }],
             messageB_translateY_in: [30, 0, { start: 0.5, end: 0.55 }],
             messageC_translateY_in: [30, 0, { start: 0.72, end: 0.77 }],
@@ -94,8 +102,25 @@
             scrollHeight: 0, 
             objs: {
                 container: document.querySelector('#scroll-section-3'),
-                canvasCaption: document.querySelector('.canvas-caption')
-            } 
+                canvasCaption: document.querySelector('.canvas-caption'),
+                canvas: document.querySelector('.image-blend-canvas'),
+                context: document.querySelector('.image-blend-canvas').getContext('2d'),
+                imagesPath: [
+                    './images/blend-image-1.jpg',
+                    './images/blend-image-2.jpg'
+                ],
+                images:[]
+            }, 
+            values: {
+                rect1X: [0,0, {start: 0, end: 0}],
+                rect2X: [0,0, {start: 0, end: 0}],
+                blendHeight: [0,0, {start: 0, end: 0}],
+                canvas_scale: [0,0, {start: 0, end: 0}],
+                canvasCaption_opacity: [0,1, {start: 0, end: 0}],
+                canvasCaption_translateY: [20, 0, {start: 0, end: 0}],
+                rectStartY: 0,
+                
+            }
         },
 
     ];
@@ -107,8 +132,30 @@
             imgElem.src = `./video/001/IMG_${6726 + i}.JPG`;
             sceneInfo[0].objs.videoImages.push(imgElem);
         }
+        
+        let imgElem2;
+        for(let i=0; i < sceneInfo[2].values.videoImageCount; i++){
+            imgElem2 = new Image();  //document.createElement('img')도 가능
+            imgElem2.src = `./video/002/IMG_${7027 + i}.JPG`;
+            sceneInfo[2].objs.videoImages.push(imgElem2);
+        }
+
+        let imgElem3
+        for (let i = 0; i< sceneInfo[3].objs.imagesPath.length; i++){
+            imgElem3 = new Image();  //document.createElement('img')도 가능
+            imgElem3.src = sceneInfo[3].objs.imagesPath[i];
+            sceneInfo[3].objs.images.push(imgElem3);
+        }
     }
     setCanvasImages();
+
+    function checkMenu() {
+        if (yOffset > 44){ 
+            document.body.classList.add('local-nav-sticky');
+        }else{
+            document.body.classList.remove('local-nav-sticky');
+        }
+    }
 
     function setLayout() {
         //각 스크룔 섹션의 높이 세팅
@@ -135,8 +182,13 @@
                 currentScene = i;
                 break;
             }
-
         } 
+        document.body.setAttribute('id',`show-scene-${currentScene}`);
+
+        const heightRatio = window.innerHeight / 1080;
+        sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%,-50%,0px) scale(${heightRatio})`;
+        sceneInfo[2].objs.canvas.style.transform = `translate3d(-50%,-50%,0px) scale(${heightRatio})`;
+        //css로 top 0 설정을 해주면 기존 사이즈에 맞춰서 맞추고 스케일을 줄이기 때문에 css에 top,left를 50%로 하고(.sticky-elem-canvas canvas) 여기서 -50%를 다시 해줌
     }
 
     function calcValues (values, currentYOffset) {
@@ -178,6 +230,7 @@
                 // console.log('0 play');
                 let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
                 objs.context.drawImage(objs.videoImages[sequence],0,0);
+                objs.canvas.style.opacity = calcValues(values.canvas_opcaity, currentYOffset);
 
                 if(scrollRatio <= 0.22) {
                     objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
@@ -216,6 +269,17 @@
 
             case 2:
                 // console.log('2 play');
+                let sequence2 = Math.round(calcValues(values.imageSequence, currentYOffset));
+                objs.context.drawImage(objs.videoImages[sequence2],0,0);
+
+                if(scrollRatio <= 0.5){
+                    //in
+                    objs.canvas.style.opacity = calcValues(values.canvas_opcaity_in, currentYOffset);
+                }else{
+                    //out
+                    objs.canvas.style.opacity = calcValues(values.canvas_opcaity_out, currentYOffset);
+                }
+
                 if (scrollRatio <= 0.25) {
                     // in
                     objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
@@ -250,8 +314,149 @@
                     objs.pinC.style.transform = `scaleY(${calcValues(values.pinC_scaleY, currentYOffset)})`;
                 }
                 break;
+
+                // currentScene 3에서 쓰는 캔버스를 미리 그려주기 시작 
+                if (scrollRatio > 0.9){
+                    const objs = sceneInfo[3].objs;
+                    const values = sceneInfo[3].values;
+                    const widthRatio = window.innerWidth / objs.canvas.width;
+                    const heightRatio = window.innerHeight / objs.canvas.height;
+                    let canvasScaleRatio;
+
+                    if(widthRatio<=heightRatio){
+                        canvasScaleRatio = heightRatio;
+                    }else{
+                        canvasScaleRatio = widthRatio;
+                    }
+                    objs.canvas.style.transform=`scale(${canvasScaleRatio})`;
+                    objs.context.fillStyle = 'white';
+                    objs.context.drawImage(objs.images[0],0,0);
+                                        
+                    const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;  // window.innerWidth를 사용하면 크롬의 경우 스크롤바의 영역까지 적용되서 보이는 영역과 계산이 다를 수 있어서 document.body.offsetWidth 사용
+                    const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+
+                    //이미지가 끝까지 올라오는 시점을 확인하기 위한 작업 
+                                        
+                    const whiteRecWidth = recalculatedInnerWidth * 0.15;
+
+                    //가려줄 박스를 그리기 위한 변수 세팅 (캔버스를 기준으로 계산한 생성할 박스의 좌상단 꼭지점 위치)
+                    values.rect1X[0]= (objs.canvas.width - recalculatedInnerWidth)/2 ;
+                    values.rect1X[1]= values.rect1X[0] - whiteRecWidth;
+                    values.rect2X[0]= values.rect1X[0] + recalculatedInnerWidth - whiteRecWidth;
+                    values.rect2X[1]= values.rect2X[0] + whiteRecWidth;
+
+                    objs.context.fillRect(parseInt( values.rect1X[0]),
+                        0, 
+                        parseInt(whiteRecWidth), //parseInt 한 경우가 캔버스에서 성능이 더 좋음 
+                        objs.canvas.height); 
+
+                    objs.context.fillRect(parseInt(values.rect2X[0]),
+                        0, 
+                        parseInt(whiteRecWidth), //parseInt 한 경우가 캔버스에서 성능이 더 좋음 
+                        objs.canvas.height); 
+                    }
+
             case 3:
+                let step = 0;
                 // console.log('3 play');
+                // 가로 세로 모두 꽉 차게 하기 위해 여기서 세팅 (계산 필요)
+                const widthRatio = window.innerWidth / objs.canvas.width;
+                const heightRatio = window.innerHeight / objs.canvas.height;
+                let canvasScaleRatio;
+
+                if(widthRatio<=heightRatio){
+                    // 캔버스보다 브라우저 창이 홀쭉한 경우
+                    canvasScaleRatio = heightRatio;
+                }else{
+                    // 캔버스 보다 브라우저 창이 납작한 경우
+                    canvasScaleRatio = widthRatio;
+                }
+                objs.canvas.style.transform=`scale(${canvasScaleRatio})`;
+                objs.context.fillStyle = 'white';
+                objs.context.drawImage(objs.images[0],0,0);
+                
+                // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight 
+                // -> 이 박스도 canvas 안에 들어가있으므로 스케일이 조정된 상태, ratio로 나눠줘서 원래대로 돌려줘야 한다.
+                const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;  // window.innerWidth를 사용하면 크롬의 경우 스크롤바의 영역까지 적용되서 보이는 영역과 계산이 다를 수 있어서 document.body.offsetWidth 사용
+                const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+
+                //이미지가 끝까지 올라오는 시점을 확인하기 위한 작업 
+                if(!values.rectStartY){
+                    // values.rectStartY = objs.canvas.getBoundingClientRect().top; //getBoundingClientRect는 현재 브라우저 위치에 대한 해당 객체의 위치정보를 가져온다.
+                    //getBoundingClientRect는 현재 스크롤 상태의 값을 불러오므로 스크롤 속도에 따라 캐치 하는 값이 다를 수 있어서 canvas.offsetTop 사용
+                    //offsetTop 값은 캔버스 스케일이 조정되기 전 상태의 값이라서 이를 고려해서 값을 계산해줘야 한다.
+                    values.rectStartY = objs.canvas.offsetTop + (objs.canvas.height - objs.canvas.height * canvasScaleRatio)/2 ; 
+                    values.rect1X[2].start = (window.innerHeight / 2) / scrollHeight;
+                    values.rect2X[2].start = (window.innerHeight / 2) / scrollHeight;
+                    values.rect1X[2].end = values.rectStartY / scrollHeight;
+                    values.rect2X[2].end = values.rectStartY / scrollHeight;
+                }
+                
+                const whiteRecWidth = recalculatedInnerWidth * 0.15;
+
+                //가려줄 박스를 그리기 위한 변수 세팅 (캔버스를 기준으로 계산한 생성할 박스의 좌상단 꼭지점 위치)
+                values.rect1X[0]= (objs.canvas.width - recalculatedInnerWidth)/2 ;
+                values.rect1X[1]= values.rect1X[0] - whiteRecWidth;
+                values.rect2X[0]= values.rect1X[0] + recalculatedInnerWidth - whiteRecWidth;
+                values.rect2X[1]= values.rect2X[0] + whiteRecWidth;
+
+                objs.context.fillRect(parseInt( calcValues(values.rect1X, currentYOffset)),
+                    0, 
+                    parseInt(whiteRecWidth), //parseInt 한 경우가 캔버스에서 성능이 더 좋음 
+                    objs.canvas.height); 
+
+                objs.context.fillRect(parseInt( calcValues(values.rect2X, currentYOffset)),
+                    0, 
+                    parseInt(whiteRecWidth), //parseInt 한 경우가 캔버스에서 성능이 더 좋음 
+                    objs.canvas.height); 
+                
+                if (scrollRatio < values.rect1X[2].end) {
+                    //이미지가 브라우저 상단에 닿기 전
+                    step = 1;
+                    objs.canvas.classList.remove('sticky'); //아래서 생성 후에 다시 돌아왔을때는 빠져야 되니까 remove
+
+                }else {
+                    step = 2;
+                    //이미지가 브라우저 상단에 닿은 후 (이미지 블렌드 )
+                    //mozilla drawimage 레퍼런스 참고 -> 그려줄 이미지의 영역(s)과 브라우저에서 위치(d)를 지정해 줄 수 있다.
+                    values.blendHeight[0] = 0;
+                    values.blendHeight[1] = objs.canvas.height;
+                    values.blendHeight[2].start = values.rect1X[2].end;
+                    values.blendHeight[2].end = values.blendHeight[2].start + 0.2;
+                    const blendHeight = calcValues (values.blendHeight, currentYOffset);
+                    
+                    objs.context.drawImage(objs.images[1],
+                        0, objs.canvas.height - blendHeight, objs.canvas.width, blendHeight,
+                        0, objs.canvas.height - blendHeight, objs.canvas.width, blendHeight
+                        );
+
+                    objs.canvas.classList.add('sticky');
+                    objs.canvas.style.top = `${ -(objs.canvas.height - objs.canvas.height * canvasScaleRatio)/2}px`;
+
+                    if ( scrollRatio > values.blendHeight[2].end){
+                        values.canvas_scale[0] = canvasScaleRatio;
+                        values.canvas_scale[1] = document.body.offsetWidth / (1.5 * objs.canvas.width);
+                        values.canvas_scale[2].start = values.blendHeight[2].end;
+                        values.canvas_scale[2].end = values.canvas_scale[2].start + 0.2;
+
+                        objs.canvas.style.transform = `scale(${calcValues(values.canvas_scale, currentYOffset)})`;
+                        objs.canvas.style.marginTop = 0; //아래로 내려가서 마진 세팅 후 올라오면 보이지 않기때문에 기본을 0으로 설정 
+                    }
+
+                    if(scrollRatio > values.canvas_scale[2].end && values.canvas_scale[2].end > 0){
+                        objs.canvas.classList.remove('sticky');
+                        objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`;  //이미지 블렌딩이 되고 축소될때 까지의 스크롤만큼 마진을 준다. (왜 이만큼 마진이 필요하지?..)
+
+                        values.canvasCaption_opacity[2].start = values.canvas_scale[2].end;
+                        values.canvasCaption_opacity[2].end = values.canvasCaption_opacity[2].start + 0.1;
+                        values.canvasCaption_translateY[2].start = values.canvasCaption_opacity[2].start;
+                        values.canvasCaption_translateY[2].end = values.canvasCaption_opacity[2].end;
+                        objs.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYOffset);
+                        objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(values.canvasCaption_translateY, currentYOffset)}%, 0)`;
+
+                    }
+                }
+
                 break;
         }
     }
@@ -289,10 +494,14 @@
 
     window.addEventListener('scroll', () => {
         yOffset = window.pageYOffset;
-        scrollLoop()
+        scrollLoop();
+        checkMenu();
     });
     
-    window.addEventListener('load', setLayout);
+    window.addEventListener('load', ()=>{
+        setLayout();
+        sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0],0,0);
+    });
     window.addEventListener('resize', setLayout);
     
 })();
@@ -323,4 +532,8 @@
 // 기본적으로는 이미지로 하는 방법과 절차는 유사
 // 이미지방식은 src 속성을 변경, 이번엔 컨텍스트 객체의 drawImage method를 통해 캔버스에 그려줌\
 //drawImages(이미지,x,y) 이용하여 그려줌
+
+// 이미지 vs 캔버스 
+// 이미지는 element에서??
+// 랜더링의 주체의 성능차이때문 (캔버스를 그리는 것들이 성능이 좋음), 캔버스는 약속된 프레임 안에서 처리
 

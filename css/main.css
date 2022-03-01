@@ -39,6 +39,12 @@ a{
         padding: 0 1rem;
     border-bottom: 1px solid #ddd;
 }
+.local-nav-sticky .local-nav{
+    position: fixed;
+    top: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: saturate(180%) blur(15px); /*뿌옇게 처리*/
+}
 .global-nav-links,
 .local-nav-links {
     display: flex; /*내용을 가로 정렬*/
@@ -62,9 +68,13 @@ a{
     margin-left: 2em;
 }
 .scroll-section {
+    position: relative; /*부모 안에서의 상대적인 위치를 계산하기 위해 relative로 설정(객체 위치 찍어보면 상대적인 위치가 나온다.) */
     padding-top: 50vh; /* 뷰포트 높이 (브라우저 창 높이)의 50% top padding 줌)*/
 }
 #scroll-section-0 h1 {
+    position: relative;  /*캔버스 이미지보다 위에 올라올 수 있도록 기본 static에서 relative로 설정하여 z-index 설정*/
+    z-index: 5;
+    top: -10vh;
     font-size: 4rem;
     text-align: center;
 }
@@ -137,7 +147,7 @@ a{
 }
 .canvas-caption{
     max-width: 1000px;
-    margin: 0 auto;
+    margin: -8em auto;
     padding : 0 1rem;
     font-size: 1.2rem;
     color: #888;
@@ -167,7 +177,25 @@ a{
 
 .sticky-elem-canvas{
     top: 0;
-    background: #ccc;
+    height: 100%;
+}
+
+.sticky-elem-canvas canvas{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+
+#scroll-section-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 세로 배치이므로 가로로 센터 정렬을 해줘야 함 */
+}
+
+.image-blend-canvas.sticky{
+    position: fixed;
+    top: 0;
 }
 
 @media (min-width: 1024px){
@@ -178,6 +206,7 @@ a{
         font-size: 4vw;
     }
     .description {
+        padding: 0;
         font-size: 2rem;
     }
     .description strong {
@@ -200,9 +229,12 @@ a{
         left: 55%;
     }
     .mid-message {
+        padding: 0;
+        width: 1000px;
         font-size: 4vw;
     }
     .canvas-caption {
+        padding: 0;
         font-size: 2rem;
     }
 }
