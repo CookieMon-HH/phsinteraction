@@ -101,13 +101,14 @@ const DescriptionDiv = styled.div`
     width: 20%;
   };
   position : fixed;
-  top : 0;
-  left: 0;
+  top : 300px;
+  left: 500px;
   width: 100%;
   display: none;
   &.${ACTIVE_SCENE_CLASS_NAME} {
     display: block;
   }
+  opacity: 0;
 `;
 
 const PinDiv = styled.div`
@@ -155,8 +156,15 @@ const _CanvasDiv = styled.div`
   display: none;
   position : fixed;
   left: 0%;
-  width: 100%;
   top : 0;
+  width : 100%;
+  height: 100%;
+`
+
+const _Canvas = styled.canvas`
+  position : absolute;
+  top: 50%;
+  left: 50%;
 `
 
 const PageSection: FC = (() => {
@@ -176,12 +184,13 @@ const PageSection: FC = (() => {
   const messageD_3 = useRef<HTMLDivElement>(null);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef_3 = useRef<HTMLCanvasElement>(null);
   
   useEffect(() => {
     if (!firstSceneContainerRef.current || !secondSceneContainerRef.current || !thirdSceneContainerRef.current || !fourthSceneContainerRef.current) return;
     if (!messageA_1.current || !messageB_1.current || !messageC_1.current || !messageD_1.current) return;
     if (!messageA_3.current || !messageB_3.current || !messageC_3.current) return;
-    if (!canvasRef.current) return ;
+    if (!canvasRef.current || !canvasRef_3.current) return ;
     const sceneUtil = new SceneUtil([{
       type: 'sticky',
       container: firstSceneContainerRef.current,
@@ -379,16 +388,19 @@ const PageSection: FC = (() => {
             endRatio: 0.9
           }
         }
-      }
+      },
+      canvas : canvasRef_3.current,
     }, {
       type: 'sticky',
       container: fourthSceneContainerRef.current,
     }]);
     const resizeEvent = sceneUtil.addResizeLayoutEvent();
     const scrollEvent = sceneUtil.addScrollLoopEvent();
+    const loadEvent = sceneUtil.addLoadEvent();
     return (() => {
       resizeEvent.dispose();
       scrollEvent.dispose();
+      loadEvent.dispose();
     })
   }, []);
   return (
@@ -396,7 +408,7 @@ const PageSection: FC = (() => {
       <_Section ref={firstSceneContainerRef}>
         <h1 >AirMug Pro</h1>
         <_CanvasDiv>
-          <canvas width={1920} height={1080} ref={canvasRef}/>
+          <_Canvas width={1920} height={1080} ref={canvasRef}/>
         </_CanvasDiv>
         <ElementDiv ref={messageA_1}>
           <p>온전히 빠져들게 하는<br/>최고급 세라믹</p>
@@ -423,6 +435,9 @@ const PageSection: FC = (() => {
         </DescriptionP>
       </_Section>
       <_Section ref={thirdSceneContainerRef}>
+        <_CanvasDiv>
+          <_Canvas width={1920} height={1080} ref={canvasRef_3}/>
+        </_CanvasDiv>
         <ElementDiv2 ref={messageA_3}>
           <p>
             <small>편안한 촉감</small>

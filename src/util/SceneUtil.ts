@@ -4,7 +4,7 @@ interface IScene {
   type: SceneType;
   container: HTMLElement;
   messageGroup?: IMessageGroup;
-  canvas? : HTMLCanvasElement;
+  canvas?: HTMLCanvasElement;
 }
 
 interface IMessage {
@@ -31,13 +31,14 @@ interface IOpacity {
 interface ITranslate extends IOpacity {
 };
 
-interface ICanvasImgSeq extends IOpacity {};
+interface ICanvasImgSeq extends IOpacity {
+};
 
 interface ISceneInfoObj {
   container: HTMLElement;
   messageGroup?: IMessageGroup;
   canvas?: HTMLCanvasElement;
-  canvasSequence? : ICanvasImgSeq;
+  canvasSequence?: ICanvasImgSeq;
 }
 
 interface ISceneInfo {
@@ -54,6 +55,7 @@ class SceneUtil {
   static prevScrollHeight = 0;
   private static currentActiveScene: HTMLElement;
   static firstSceneImages: HTMLImageElement[] = [];
+  static thirdSceneImages: HTMLImageElement[] = [];
   
   constructor(data: IScene[]) {
     SceneUtil.sceneInfo = data.map((scene: IScene) => ({
@@ -63,11 +65,11 @@ class SceneUtil {
       obj: {
         container: scene.container,
         messageGroup: scene.messageGroup,
-        canvas : scene.canvas,
-        canvasSequence : {
-          range : [0, 1],
-          startRatio : 0,
-          endRatio : 1
+        canvas: scene.canvas,
+        canvasSequence: {
+          range: [0, 1],
+          startRatio: 0,
+          endRatio: 1
         }
       }
     }));
@@ -81,7 +83,11 @@ class SceneUtil {
     SceneUtil.sceneInfo.forEach((sceneInfo: ISceneInfo) => {
       sceneInfo.scrollHeight = sceneInfo.heightNum * window.innerHeight;
       sceneInfo.obj.container.style.height = `${sceneInfo.scrollHeight}px`;
-    })
+      const heightRatio = window.innerHeight / 1080;
+      if (sceneInfo.obj.canvas) {
+        sceneInfo.obj.canvas.style.transform = `translate3d(-50%,-50%, 0) scale(${heightRatio})`;
+      }
+    });
   }
   
   private static getCurrentSceneIndex = () => {
@@ -115,10 +121,16 @@ class SceneUtil {
   }
   
   private static setCanvasImages() {
-    for(let i = 0; i < 300; ++i) {
+    for (let i = 0; i < 300; ++i) {
       const imgElem = new Image();
       imgElem.src = `/assets/images/001/IMG_${6726 + i}.JPG`;
       SceneUtil.firstSceneImages.push(imgElem);
+    }
+    
+    for (let i = 0; i < 960; ++i) {
+      const imgElem = new Image();
+      imgElem.src = `/assets/images/002/IMG_${7027 + i}.JPG`;
+      SceneUtil.thirdSceneImages.push(imgElem);
     }
   }
   
@@ -131,9 +143,14 @@ class SceneUtil {
         const firstCanvasSeq = SceneUtil.sceneInfo[currentSceneIndex].obj.canvasSequence;
         if (firstGroup === undefined || firstCanvas === undefined || firstCanvasSeq === undefined) return;
         const context = firstCanvas.getContext('2d');
-        if(!context) return;
+        if (!context) return;
         const seq = Math.round(SceneUtil.calcValues(firstCanvasSeq, pageYOffset) * 300) | 0;
         context.drawImage(SceneUtil.firstSceneImages[seq], 0, 0);
+        firstCanvas.style.opacity = SceneUtil.calcValues({
+          range: [1, 0],
+          startRatio: 0.9,
+          endRatio: 1.0,
+        }, pageYOffset).toString();
         const firstGroupRatio = pageYOffset / SceneUtil.currentActiveScene.scrollHeight;
         firstGroup.messageA.message.style.opacity = firstGroupRatio <= 0.22 ? SceneUtil.calcValues(firstGroup.messageA.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageA.opacityOut, pageYOffset).toString();
         firstGroup.messageB.message.style.opacity = firstGroupRatio <= 0.42 ? SceneUtil.calcValues(firstGroup.messageB.opacityIn, pageYOffset).toString() : SceneUtil.calcValues(firstGroup.messageB.opacityOut, pageYOffset).toString();
@@ -149,9 +166,26 @@ class SceneUtil {
         return;
       case 2:
         const thirdGroup = SceneUtil.sceneInfo[currentSceneIndex].obj.messageGroup;
-        if (thirdGroup === undefined) return;
+        const thirdCanvas = SceneUtil.sceneInfo[currentSceneIndex].obj.canvas;
+        const thirdCanvasSeq = SceneUtil.sceneInfo[currentSceneIndex].obj.canvasSequence;
+        if (thirdGroup === undefined || thirdCanvas === undefined || thirdCanvasSeq === undefined) return;
+        const context_3 = thirdCanvas.getContext('2d');
+        if (!context_3) return;
         const prev = pageYOffset - 13660;
+        const seq_3 = Math.round(SceneUtil.calcValues(thirdCanvasSeq, prev) * 960) | 0;
+        context_3.drawImage(SceneUtil.thirdSceneImages[seq_3], 0, 0);
+        
         const thirdGroupRatio = (prev) / SceneUtil.currentActiveScene.scrollHeight;
+        thirdCanvas.style.opacity = thirdGroupRatio <= 0.5 ? SceneUtil.calcValues({
+            range: [0, 1],
+            startRatio: 0.0,
+            endRatio: 0.1,
+          }, prev).toString() :
+          SceneUtil.calcValues({
+            range: [1, 0],
+            startRatio: 0.95,
+            endRatio: 1.0,
+          }, prev).toString();
         thirdGroup.messageA.message.style.opacity = thirdGroupRatio <= 0.32 ? SceneUtil.calcValues(thirdGroup.messageA.opacityIn, prev).toString() : SceneUtil.calcValues(thirdGroup.messageA.opacityOut, prev).toString();
         thirdGroup.messageB.message.style.opacity = thirdGroupRatio <= 0.62 ? SceneUtil.calcValues(thirdGroup.messageB.opacityIn, prev).toString() : SceneUtil.calcValues(thirdGroup.messageB.opacityOut, prev).toString();
         thirdGroup.messageC.message.style.opacity = thirdGroupRatio <= 0.92 ? SceneUtil.calcValues(thirdGroup.messageC.opacityIn, prev).toString() : SceneUtil.calcValues(thirdGroup.messageC.opacityOut, prev).toString();
@@ -185,6 +219,20 @@ class SceneUtil {
     return {
       dispose: () => {
         window.removeEventListener('resize', SceneUtil.setLayout);
+      }
+    }
+  }
+  
+  addLoadEvent = () => {
+    window.addEventListener('load', () => {
+      SceneUtil.setLayout();
+      const context = SceneUtil.sceneInfo[0].obj.canvas?.getContext('2d');
+      if (!context) return;
+      context.drawImage(SceneUtil.firstSceneImages[0], 0, 0);
+    });
+    return {
+      dispose: () => {
+        window.removeEventListener('load', SceneUtil.setLayout);
       }
     }
   }
