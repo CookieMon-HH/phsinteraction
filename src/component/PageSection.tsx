@@ -117,7 +117,7 @@ const PinDiv = styled.div`
   background: rgb(29, 29, 31);
 `;
 
-const MidMessageP = styled.p`
+const MidMessageP = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -132,7 +132,7 @@ const MidMessageP = styled.p`
   };
 `;
 
-const CanvasCaptionP = styled.p`
+const CanvasCaptionP = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 1rem;
@@ -146,6 +146,9 @@ const CanvasCaptionP = styled.p`
 
 const _Section = styled.section`
   &.${ACTIVE_SCENE_CLASS_NAME} {
+    display: flex;
+  flex-direction: column;
+  align-items: center;
     div{
       display: block;
     }
@@ -167,6 +170,17 @@ const _Canvas = styled.canvas`
   left: 50%;
 `
 
+const _Fourth = styled.div`
+`
+
+const _CanvasDiv_4 = styled.div`
+  display: none;
+
+`
+
+const _Canvas_4 = styled.canvas`
+`
+
 const PageSection: FC = (() => {
   const firstSceneContainerRef = useRef<HTMLElement>(null);
   const secondSceneContainerRef = useRef<HTMLElement>(null);
@@ -185,12 +199,13 @@ const PageSection: FC = (() => {
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasRef_3 = useRef<HTMLCanvasElement>(null);
+  const canvasRef_4 = useRef<HTMLCanvasElement>(null);
   
   useEffect(() => {
     if (!firstSceneContainerRef.current || !secondSceneContainerRef.current || !thirdSceneContainerRef.current || !fourthSceneContainerRef.current) return;
     if (!messageA_1.current || !messageB_1.current || !messageC_1.current || !messageD_1.current) return;
     if (!messageA_3.current || !messageB_3.current || !messageC_3.current) return;
-    if (!canvasRef.current || !canvasRef_3.current) return ;
+    if (!canvasRef.current || !canvasRef_3.current || !canvasRef_4.current) return;
     const sceneUtil = new SceneUtil([{
       type: 'sticky',
       container: firstSceneContainerRef.current,
@@ -288,7 +303,7 @@ const PageSection: FC = (() => {
           }
         },
       },
-      canvas : canvasRef.current
+      canvas: canvasRef.current
     }, {
       type: 'normal',
       container: secondSceneContainerRef.current,
@@ -389,10 +404,11 @@ const PageSection: FC = (() => {
           }
         }
       },
-      canvas : canvasRef_3.current,
+      canvas: canvasRef_3.current,
     }, {
       type: 'sticky',
       container: fourthSceneContainerRef.current,
+      canvas: canvasRef_4.current,
     }]);
     const resizeEvent = sceneUtil.addResizeLayoutEvent();
     const scrollEvent = sceneUtil.addScrollLoopEvent();
@@ -406,7 +422,7 @@ const PageSection: FC = (() => {
   return (
     <Frame>
       <_Section ref={firstSceneContainerRef}>
-        <h1 >AirMug Pro</h1>
+        <h1>AirMug Pro</h1>
         <_CanvasDiv>
           <_Canvas width={1920} height={1080} ref={canvasRef}/>
         </_CanvasDiv>
@@ -450,21 +466,25 @@ const PageSection: FC = (() => {
             어느새 사라지고 오롯이 당신과 음료만 남게 되죠.
           </p>
         </DescriptionDiv>
+        <PinDiv/>
         <DescriptionDiv ref={messageC_3}>
           디자인 앤 퀄리티 오브 스웨덴,<br/>메이드 인 차이나
         </DescriptionDiv>
+        <PinDiv/>
       </_Section>
       <_Section ref={fourthSceneContainerRef}>
-        <PinDiv/>
         <MidMessageP>
           <strong>Retina 머그</strong><br/>
           아이디어를 광활하게 펼칠<br/>
           아름답고 부드러운 음료 공간.
         </MidMessageP>
+        <_Canvas_4 width={1920} height={1080} ref={canvasRef_4}/>
         <CanvasCaptionP>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus magni iure dolore ipsa vitae ea natus accusamus
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus magni iure dolore ipsa vitae ea natus
+          accusamus
           suscipit rem et maiores odio, dignissimos repellendus velit voluptatem, eaque rerum ex voluptates!
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus magni iure dolore ipsa vitae ea natus accusamus
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus magni iure dolore ipsa vitae ea natus
+          accusamus
           suscipit rem et maiores odio, dignissimos repellendus velit voluptatem, eaque rerum ex voluptates!
         </CanvasCaptionP>
       </_Section>

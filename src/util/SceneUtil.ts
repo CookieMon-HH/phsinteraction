@@ -34,11 +34,19 @@ interface ITranslate extends IOpacity {
 interface ICanvasImgSeq extends IOpacity {
 };
 
+interface IRect {
+  rect1x: IOpacity;
+  rect2x: IOpacity;
+  startY: number;
+  endY: number;
+};
+
 interface ISceneInfoObj {
   container: HTMLElement;
   messageGroup?: IMessageGroup;
   canvas?: HTMLCanvasElement;
   canvasSequence?: ICanvasImgSeq;
+  rect?: IRect;
 }
 
 interface ISceneInfo {
@@ -56,6 +64,7 @@ class SceneUtil {
   private static currentActiveScene: HTMLElement;
   static firstSceneImages: HTMLImageElement[] = [];
   static thirdSceneImages: HTMLImageElement[] = [];
+  static fourthSceneImages: HTMLImageElement[] = [];
   
   constructor(data: IScene[]) {
     SceneUtil.sceneInfo = data.map((scene: IScene) => ({
@@ -70,6 +79,20 @@ class SceneUtil {
           range: [0, 1],
           startRatio: 0,
           endRatio: 1
+        },
+        rect: {
+          rect1x: {
+            range: [0, 0],
+            startRatio: 0,
+            endRatio: 0
+          },
+          rect2x: {
+            range: [0, 0],
+            startRatio: 0,
+            endRatio: 0
+          },
+          startY: 0,
+          endY: 0
         }
       }
     }));
@@ -80,11 +103,12 @@ class SceneUtil {
   }
   
   static setLayout = () => {
-    SceneUtil.sceneInfo.forEach((sceneInfo: ISceneInfo) => {
+    SceneUtil.sceneInfo.forEach((sceneInfo: ISceneInfo, index) => {
       sceneInfo.scrollHeight = sceneInfo.heightNum * window.innerHeight;
       sceneInfo.obj.container.style.height = `${sceneInfo.scrollHeight}px`;
       const heightRatio = window.innerHeight / 1080;
       if (sceneInfo.obj.canvas) {
+        if (index === 3) return;
         sceneInfo.obj.canvas.style.transform = `translate3d(-50%,-50%, 0) scale(${heightRatio})`;
       }
     });
@@ -132,6 +156,12 @@ class SceneUtil {
       imgElem.src = `/assets/images/002/IMG_${7027 + i}.JPG`;
       SceneUtil.thirdSceneImages.push(imgElem);
     }
+    
+    for (let i = 0; i < 2; ++i) {
+      const imgElem = new Image();
+      imgElem.src = `/assets/images/blend-image-${1 + i}.jpg`;
+      SceneUtil.fourthSceneImages.push(imgElem);
+    }
   }
   
   private static playAnimation = (currentSceneIndex: number) => {
@@ -171,7 +201,7 @@ class SceneUtil {
         if (thirdGroup === undefined || thirdCanvas === undefined || thirdCanvasSeq === undefined) return;
         const context_3 = thirdCanvas.getContext('2d');
         if (!context_3) return;
-        const prev = pageYOffset - 13660;
+        const prev = pageYOffset - 13960;
         const seq_3 = Math.round(SceneUtil.calcValues(thirdCanvasSeq, prev) * 960) | 0;
         context_3.drawImage(SceneUtil.thirdSceneImages[seq_3], 0, 0);
         
@@ -195,6 +225,62 @@ class SceneUtil {
         thirdGroup.messageC.message.style.transform = thirdGroupRatio <= 0.92 ? `translateY(${SceneUtil.calcValues(thirdGroup.messageC.translateIn, prev)}%)` : `translateY(${SceneUtil.calcValues(thirdGroup.messageC.translateOut, prev)}%)`;
         return;
       case 3:
+        const prev_3 = pageYOffset - 19660;
+        const fourthCanvas = SceneUtil.sceneInfo[currentSceneIndex].obj.canvas;
+        const fourthRect = SceneUtil.sceneInfo[currentSceneIndex].obj.rect;
+        if (fourthCanvas === undefined || fourthRect === undefined) return;
+        const widthRatio = window.innerWidth / fourthCanvas.width;
+        const heightRatio = window.innerHeight / fourthCanvas.height;
+        const canvasScaleRatio = widthRatio <= heightRatio ? heightRatio : widthRatio;
+        
+        const context_4 = fourthCanvas.getContext('2d');
+        fourthCanvas.style.transform = `scale(${canvasScaleRatio})`;
+        
+        if (!context_4) return;
+        context_4.drawImage(SceneUtil.fourthSceneImages[0], 0, 0);
+        
+        const recalculatedInnerWidth = document.body.offsetWidth / canvasScaleRatio;
+        const recalculatedInnerHeight = window.innerHeight / canvasScaleRatio;
+        
+        if (!fourthRect.startY) {
+          fourthRect.startY = fourthCanvas.getBoundingClientRect().top;
+          fourthRect.rect1x.endRatio = fourthRect.startY / SceneUtil.sceneInfo[currentSceneIndex].scrollHeight;
+          fourthRect.rect2x.endRatio = fourthRect.startY / SceneUtil.sceneInfo[currentSceneIndex].scrollHeight;
+        }
+        
+        const whiteRectWidth = recalculatedInnerWidth * 0.15;
+        fourthRect.rect1x.range[0] = (fourthCanvas.width - recalculatedInnerWidth) / 2;
+        fourthRect.rect1x.range[1] = fourthRect.rect1x.range[0] - whiteRectWidth;
+        fourthRect.rect2x.range[0] = fourthRect.rect1x.range[0] + recalculatedInnerWidth - whiteRectWidth;
+        fourthRect.rect2x.range[1] = fourthRect.rect2x.range[0] + whiteRectWidth;
+        
+        
+        context_4.fillRect(SceneUtil.calcValues(fourthRect.rect1x, prev_3), 0, whiteRectWidth, fourthCanvas.height);
+        context_4.fillRect(SceneUtil.calcValues(fourthRect.rect2x, prev_3), 0, whiteRectWidth, fourthCanvas.height);
+        
+        if (prev_3 < fourthRect.rect2x.endRatio) {
+        
+        } else {
+          let blend: IOpacity = {
+            range: [0, fourthCanvas.height],
+            startRatio: fourthRect.rect1x.endRatio,
+            endRatio: fourthRect.rect1x.endRatio + 0.2
+          }
+          const blendHeight = SceneUtil.calcValues(blend, prev_3);
+          context_4.drawImage(SceneUtil.fourthSceneImages[1], 0, fourthCanvas.height - blendHeight, fourthCanvas.width, blendHeight, 0, fourthCanvas.height - blendHeight, fourthCanvas.width, blendHeight);
+          fourthCanvas.style.top = `${fourthCanvas.getBoundingClientRect().top}px`
+          
+          if(prev_3 > blend.endRatio){
+            let scale : IOpacity = {
+              range: [canvasScaleRatio, document.body.offsetWidth / (1.5 * fourthCanvas.width)],
+              startRatio : blend.endRatio,
+              endRatio : blend.endRatio + 0.2
+            }
+            
+            fourthCanvas.style.transform = `scale(${SceneUtil.calcValues(scale, prev_3)})`;
+          }
+        }
+        
         return;
     }
   }
