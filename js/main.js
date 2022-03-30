@@ -222,6 +222,7 @@
         const currentYOffset = yOffset - prevScrollHeight;
         const scrollHeight = sceneInfo[currentScene].scrollHeight;
         const scrollRatio = currentYOffset / scrollHeight;
+        // console.log(scrollRatio);
 
         // console.log(currentScene,currentYOffset,scrollHeight,scrollRatio);
 
@@ -453,8 +454,9 @@
                         values.canvasCaption_translateY[2].end = values.canvasCaption_opacity[2].end;
                         objs.canvasCaption.style.opacity = calcValues(values.canvasCaption_opacity, currentYOffset);
                         objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(values.canvasCaption_translateY, currentYOffset)}%, 0)`;
-
-                    }
+                    }else {
+						objs.canvasCaption.style.opacity = values.canvasCaption_opacity[0];
+					}
                 }
 
                 break;
