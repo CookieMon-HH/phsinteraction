@@ -1,5 +1,13 @@
 import { IAnimaitonInOutProps, IAnimaitonProps } from "../../../utils/AnimationCalculator";
 
+const zeroCanvasOpacityIn: IAnimaitonProps = { from: 0.3, to: 1, startRatio: 0, endRatio: 0.3 };
+const zeroCanvasOpacityOut: IAnimaitonProps = { from: 1, to: 0, startRatio: 0.6, endRatio: 0.9 };
+const zeroCanvasOpacityInOut: IAnimaitonInOutProps = { in: zeroCanvasOpacityIn, out: zeroCanvasOpacityOut, turningRatio: 0.6 };
+
+const ZeroIndexPageSectionAnimation = {
+  zeroCanvasOpacityInOut,
+};
+
 const firstMessageAOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.1, endRatio: 0.2 };
 const firstMessageBOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.3, endRatio: 0.4 };
 const firstMessageCOpacityIn: IAnimaitonProps = { from: 0, to: 1, startRatio: 0.5, endRatio: 0.6 };
@@ -104,6 +112,7 @@ const ForthIndexPageSectionAnimation = {
 };
 
 export {
+  ZeroIndexPageSectionAnimation,
   FirstIndexPageSectionAnimation,
   ThirdIndexPageSectionAnimation,
   ForthIndexPageSectionAnimation,
