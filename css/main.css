@@ -20,11 +20,30 @@ a{
 }
 
 .global-nav{
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;  /*postion~width는 scene no. 계산시 메뉴 길이는 반영되지 않도록 하기 위함(공간차지 하지 않도록)*/
     height : 44px;
+    padding: 0 1rem;
 }
 .local-nav{
+    position: absolute;
+    top: 45px;
+    left: 0;
+    z-index: 11;
+    width: 100%;  /*postion~width는 scene no. 계산시 메뉴 길이는 반영되지 않도록 하기 위함*/
     height: 52px;
+    height: 52px;
+        padding: 0 1rem;
     border-bottom: 1px solid #ddd;
+}
+.local-nav-sticky .local-nav{
+    position: fixed;
+    top: 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: saturate(180%) blur(15px); /*뿌옇게 처리*/
 }
 .global-nav-links,
 .local-nav-links {
@@ -47,4 +66,175 @@ a{
 }
 .local-nav-links a:not(.product-name) {
     margin-left: 2em;
+}
+.scroll-section {
+    position: relative; /*부모 안에서의 상대적인 위치를 계산하기 위해 relative로 설정(객체 위치 찍어보면 상대적인 위치가 나온다.) */
+    padding-top: 50vh; /* 뷰포트 높이 (브라우저 창 높이)의 50% top padding 줌)*/
+}
+#scroll-section-0 h1 {
+    position: relative;  /*캔버스 이미지보다 위에 올라올 수 있도록 기본 static에서 relative로 설정하여 z-index 설정*/
+    z-index: 5;
+    top: -10vh;
+    font-size: 4rem;
+    text-align: center;
+}
+.main-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 35vh;
+    margin: 5px 0;
+    height: 3em;
+    font-size: 2.5rem;
+    opacity: 0;
+}
+.main-message p {
+    font-weight : bold;
+    text-align: center;
+    line-height: 1.2;
+}
+.main-message small {
+    display: block;
+    margin-bottom: 0.5em;
+    font-size: 1.2rem;
+}
+#scroll-section2.main-message{
+    font-size: 3.5rem;
+}
+
+.description {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 1rem; /*상하0, 좌우1*/
+    font-size : 1.2;
+    color: #888;
+}
+.description strong {
+    float: left ;
+    /*em을 사용한 이유는 font 사이즈의 비율을 활용하기 위함, 이경우 2.5rem의 3배가 적용*/
+    margin-right: 0.2em; /*font size 3rem의 0.2배*/
+    font-size: 3rem; /*html 폰트 사이즈 14px*3*/
+    color : rgb(29,29,31);
+}
+.desc-message {
+    width : 50%;
+    font-weight : bold;
+    opacity: 0;
+}
+.pin {
+    width : 1px;
+    height : 100px;
+    background-color: rgb(29,29,31);
+}
+#scroll-section-2 .b {
+    top: 10%;
+    left: 40%;
+}
+#scroll-section-2 .c {
+    top: 15%;
+    left: 45%;
+}
+
+.mid-message{
+    max-width: 1000px;
+    margin: 0 auto;
+    padding : 0 1rem;
+    font-size: 2rem;
+    color : #888;
+}
+.mid-message strong{
+    color : rgb(29,29,31);
+}
+.canvas-caption{
+    max-width: 1000px;
+    margin: -8em auto;
+    padding : 0 1rem;
+    font-size: 1.2rem;
+    color: #888;
+}
+.footer {
+    display : flex;
+    align-items: center;
+    justify-content: center;
+    height: 7rem;
+    color : white;
+    background-color : darkorange;
+}
+/* 위치 고정되어서 나오는 텍스트들에 대한 처리 (postion fixed로 처리) */
+.sticky-elem {
+    display: none; /*none 처리 한 후에 지정된 영역에서만 나오도록 처리*/
+    position: fixed;     
+    left: 0;
+    width: 100%;
+}
+/* 각 영역(body)에서 특정 id를 가진 텍스트가 나올 수 있도록 묶어준다. */
+#show-scene-0 #scroll-section-0 .sticky-elem,
+#show-scene-1 #scroll-section-1 .sticky-elem,
+#show-scene-2 #scroll-section-2 .sticky-elem,
+#show-scene-3 #scroll-section-3 .sticky-elem{
+    display: block;
+}
+
+.sticky-elem-canvas{
+    top: 0;
+    height: 100%;
+}
+
+.sticky-elem-canvas canvas{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+
+#scroll-section-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 세로 배치이므로 가로로 센터 정렬을 해줘야 함 */
+}
+
+.image-blend-canvas.sticky{
+    position: fixed;
+    top: 0;
+}
+
+@media (min-width: 1024px){
+    #scroll-section-0 h1 {
+        font-size: 9vw;  /*뷰포트 사이즈*/
+    }
+    .main-message {
+        font-size: 4vw;
+    }
+    .description {
+        padding: 0;
+        font-size: 2rem;
+    }
+    .description strong {
+        font-size: 6rem;
+    }
+    #scroll-section-2 .main-message {
+        font-size: 6vw;
+    }
+    .main-message small{
+        font-size: 1.5vw;
+    }
+    .desc-message {
+        width: 20%;
+    }
+    #scroll-section-2 .b {
+        top: 20%;
+        left: 53%;
+    }
+    #scroll-section-2 .c {
+        left: 55%;
+    }
+    .mid-message {
+        padding: 0;
+        width: 1000px;
+        font-size: 4vw;
+    }
+    .canvas-caption {
+        padding: 0;
+        font-size: 2rem;
+    }
 }
